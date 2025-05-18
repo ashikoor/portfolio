@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashikur Rahman | Futuristic Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="light-mode">
+    <div class="noise-overlay"></div>
+    <div class="scanner-line"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">AR</div>
+                <div class="logo-text">Ashikur.Rahman_</div>
+            </div>
+            <div class="nav-items">
+                <a href="#home" class="nav-item active" data-key="h"><span class="key-hint">H</span>Home</a>
+                <a href="#projects" class="nav-item" data-key="p"><span class="key-hint">P</span>Projects</a>
+                <a href="#about" class="nav-item" data-key="a"><span class="key-hint">A</span>About</a>
+                <a href="#contact" class="nav-item" data-key="c"><span class="key-hint">C</span>Contact</a>
+            </div>
+            <div class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-sun"></i>
+                <i class="fas fa-moon"></i>
+                <div class="toggle-circle"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="section active">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="badge">Available for projects</div>
+                    <h1 class="title">
+                        <div class="glitch-wrapper">
+                            <div class="glitch" data-text="Ashikur Rahman">Ashikur Rahman</div>
+                        </div>
+                        <div class="subtitle">Futuristic Developer</div>
+                    </h1>
+                    <p class="description">Building tomorrow's digital experiences with today's technology. Specializing in creating immersive, accessible and futuristic web applications.</p>
+                    <div class="cta-container">
+                        <a href="#projects" class="cta-button primary">
+                            <span class="cta-icon"><i class="fas fa-code"></i></span>
+                            <span class="cta-text">View Projects</span>
+                        </a>
+                        <a href="#contact" class="cta-button secondary">
+                            <span class="cta-icon"><i class="fas fa-paper-plane"></i></span>
+                            <span class="cta-text">Contact Me</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="orbit-container">
+                        <div class="orbit">
+                            <div class="skill-orbit" style="--index: 0;"><i class="fab fa-react"></i></div>
+                            <div class="skill-orbit" style="--index: 1;"><i class="fab fa-node-js"></i></div>
+                            <div class="skill-orbit" style="--index: 2;"><i class="fab fa-html5"></i></div>
+                            <div class="skill-orbit" style="--index: 3;"><i class="fab fa-css3-alt"></i></div>
+                            <div class="skill-orbit" style="--index: 4;"><i class="fab fa-js"></i></div>
+                            <div class="skill-orbit" style="--index: 5;"><i class="fab fa-java"></i></div>
+                            <div class="skill-orbit" style="--index: 6;"><i class="fab fa-python"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint">
+                <div class="scroll-icon">
+                    <div class="mouse">
+                        <div class="wheel"></div>
+                    </div>
+                </div>
+                <div class="scroll-text">Scroll to explore</div>
+            </div>
+        </section>
+
+        <section id="projects" class="section">
+            <div class="section-header">
+                <h2>Recent Projects<span class="accent">.</span></h2>
+                <p>Discover my latest innovative work</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-tag">Platform</div>
+                        <h3>Bachpan</h3>
+                    </div>
+                    <p class="project-description">A supportive platform designed to help children in toxic environments find safety and resources.</p>
+                    <div class="project-tech">
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>MongoDB</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/ashikoor/bachpan" target="_blank" class="project-link">
+                            <i class="fab fa-github"></i> Repository
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-tag">Web App</div>
+                        <h3>HBDA</h3>
+                    </div>
+                    <p class="project-description">An interactive and immersive birthday greeting experience created for Akshaj.</p>
+                    <div class="project-tech">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/ashikoor/hbda" target="_blank" class="project-link">
+                            <i class="fab fa-github"></i> Repository
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-tag">UI Component</div>
+                        <h3>Futuristic Login/Signup</h3>
+                    </div>
+                    <p class="project-description">A sleek, modern authentication UI with advanced animations and security features.</p>
+                    <div class="project-tech">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/ashikoor/futuristic-login-signup" target="_blank" class="project-link">
+                            <i class="fab fa-github"></i> Repository
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2>About Me<span class="accent">.</span></h2>
+                <p>The developer behind the code</p>
+            </div>
+            <div class="about-container">
+                <div class="about-card">
+                    <div class="about-header">
+                        <div class="terminal-buttons">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="terminal-title">ashikur_profile.sh</div>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="line"><span class="prompt">$</span> <span class="command">cat profile.json</span></div>
+                        <div class="output">
+                            {<br>
+                            &nbsp;&nbsp;"name": "Ashikur Rahman",<br>
+                            &nbsp;&nbsp;"role": "Futuristic Developer",<br>
+                            &nbsp;&nbsp;"location": "Digital Frontier",<br>
+                            &nbsp;&nbsp;"passion": "Building next-gen web experiences",<br>
+                            &nbsp;&nbsp;"mission": "Creating accessible technology for all"<br>
+                            }
+                        </div>
+                        <div class="line"><span class="prompt">$</span> <span class="command">ls skills/</span></div>
+                        <div class="output typing">frontend/ backend/ design/ ai-integration/</div>
+                        <div class="line"><span class="prompt">$</span> <span class="cursor"></span></div>
+                    </div>
+                </div>
+                
+                <div class="skills-container">
+                    <h3>Tech Stack</h3>
+                    <div class="skills-grid">
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>React.js</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Node.js</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>HTML5</span>
+                                <span>98%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 98%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>CSS3</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>JavaScript</span>
+                                <span>94%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 94%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Java</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Python</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Tailwind CSS</span>
+                                <span>96%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-fill" style="--percent: 96%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="section-header">
+                <h2>Get In Touch<span class="accent">.</span></h2>
+                <p>Let's collaborate on something amazing</p>
+            </div>
+            <div class="contact-container">
+                <div class="contact-form-container">
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-field">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required autocomplete="name">
+                            <div class="field-focus"></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" required autocomplete="email">
+                            <div class="field-focus"></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                            <div class="field-focus"></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required rows="5"></textarea>
+                            <div class="field-focus"></div>
+                        </div>
+                        <button type="submit" class="submit-button">
+                            <span class="button-text">Send Message</span>
+                            <span class="button-icon"><i class="fas fa-paper-plane"></i></span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <a href="mailto:ashikurrahmanimp@hotmail.com">ashikurrahmanimp@hotmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>GitHub</h3>
+                            <a href="https://github.com/ashikoor" target="_blank">github.com/ashikoor</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Twitter/X</h3>
+                            <a href="https://x.com/ashikurraxman" target="_blank">x.com/ashikurraxman</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">&copy; 2025 Ashikur Rahman. All rights reserved.</div>
+            <div class="social-links">
+                <a href="https://github.com/ashikoor" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://x.com/ashikurraxman" target="_blank" aria-label="Twitter/X"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:ashikurrahmanimp@hotmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div class="keyboard-hint">
+        <div class="keyboard-hint-content">
+            <div class="keyboard-title">Keyboard Navigation</div>
+            <div class="keyboard-shortcuts">
+                <div class="shortcut">
+                    <span class="key">H</span>
+                    <span class="action">Home</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">P</span>
+                    <span class="action">Projects</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">A</span>
+                    <span class="action">About</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">C</span>
+                    <span class="action">Contact</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">T</span>
+                    <span class="action">Toggle Theme</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">?</span>
+                    <span class="action">Show/Hide This Guide</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
