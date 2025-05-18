@@ -8,6 +8,17 @@ const cursorDot = document.querySelector('.cursor-dot');
 const cursorOutline = document.querySelector('.cursor-outline');
 const aboutContainer = document.querySelector('.about-container');
 const contactForm = document.getElementById('contact-form');
+document.getElementById("contact-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // prevent actual form submission
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const subject = encodeURIComponent(document.getElementById("subject").value.trim());
+    const message = encodeURIComponent(document.getElementById("message").value.trim());
+
+    const mailtoLink = `mailto:ashikurrahmanimp@hotmail.com?subject=${subject}&body=${message}%0A%0AFrom: ${name} (${email})`;
+    window.location.href = mailtoLink;
+});
 
 // Initialize
 let currentSection = 0;
