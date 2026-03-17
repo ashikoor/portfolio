@@ -3,386 +3,3784 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASHIKUR — SKETCH PORTFOLIO</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@1&display=swap" rel="stylesheet">
+<title>ASHIKUR / HORROR SURREALIST SKETCHES</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@1&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════════════════════════════════
+   RESET & ROOT VARIABLES
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
-  --r: #c8001a; --w: #f0e8d8; --g: #c8901a;
-  --dk: #060408; --mdk: #0d0608;
+  --blood:       #8b0000;
+  --blood-bright:#c8001a;
+  --blood-pale:  #3d0000;
+  --void:        #020104;
+  --void-mid:    #07030a;
+  --void-light:  #0f080f;
+  --bone:        #e8dcc8;
+  --bone-dim:    #a89880;
+  --bone-ghost:  #3a3028;
+  --rust:        #7a3010;
+  --rust-bright: #c84010;
+  --gold-sick:   #8a6820;
+  --gold-pale:   #c8a840;
+  --mold:        #1a2a10;
+  --mold-bright: #2a4018;
+  --flesh:       #c87858;
+  --ink:         #080410;
+  --static:      rgba(255,255,255,0.015);
+  --glitch-r:    rgba(200,0,26,0.6);
+  --glitch-b:    rgba(0,40,200,0.4);
+  --noise-opacity: 0.04;
 }
-html { scroll-behavior: smooth; }
-body { background: var(--dk); color: var(--w); font-family: 'Space Mono', monospace; overflow-x: hidden; cursor: crosshair; }
-::selection { background: var(--r); color: var(--w); }
 
-/* ══ HERO ══ */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--void);
+  color: var(--bone);
+  font-family: 'Space Mono', monospace;
+  overflow-x: hidden;
+  cursor: none;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--blood-bright);
+  color: var(--bone);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════════════════════════════ */
+#cursor-outer {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--blood-bright);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+#cursor-inner {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: var(--blood-bright);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.1s ease, height 0.1s ease, background 0.2s ease;
+}
+
+#cursor-outer.hovering {
+  width: 60px;
+  height: 60px;
+  border-color: var(--gold-pale);
+  border-width: 2px;
+}
+
+#cursor-inner.hovering {
+  width: 10px;
+  height: 10px;
+  background: var(--gold-pale);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NOISE OVERLAY — persistent grain across entire page
+═══════════════════════════════════════════════════════════════ */
+#noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  animation: noise-shift 0.08s steps(1) infinite;
+}
+
+@keyframes noise-shift {
+  0%   { background-position: 0 0; }
+  10%  { background-position: -5% -10%; }
+  20%  { background-position: -15% 5%; }
+  30%  { background-position: 7% -25%; }
+  40%  { background-position: -5% 25%; }
+  50%  { background-position: -15% 10%; }
+  60%  { background-position: 15% 0%; }
+  70%  { background-position: 0 15%; }
+  80%  { background-position: 3% 35%; }
+  90%  { background-position: -10% 10%; }
+  100% { background-position: 0 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCANLINES
+═══════════════════════════════════════════════════════════════ */
+#scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOADING SCREEN
+═══════════════════════════════════════════════════════════════ */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99997;
+  background: var(--void);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-eye-container {
+  position: relative;
+  width: 120px;
+  height: 80px;
+  margin-bottom: 40px;
+}
+
+.loader-eye {
+  width: 120px;
+  height: 80px;
+  animation: loader-blink 2s ease-in-out infinite;
+}
+
+@keyframes loader-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.05); }
+}
+
+.loader-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.6em;
+  color: var(--blood-bright);
+  animation: loader-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loader-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.loader-bar-wrap {
+  width: 200px;
+  height: 1px;
+  background: var(--blood-pale);
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.loader-bar {
+  height: 100%;
+  background: var(--blood-bright);
+  width: 0%;
+  transition: width 0.05s linear;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  background: linear-gradient(to bottom, rgba(2,1,4,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(2px);
+  transition: background 0.4s ease;
+}
+
+nav.scrolled {
+  background: rgba(2,1,4,0.97);
+  border-bottom: 1px solid var(--blood-pale);
+}
+
+.nav-logo {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 28px;
+  color: var(--bone);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--blood-bright);
+  transition: width 0.3s ease;
+}
+
+.nav-logo:hover { color: var(--blood-bright); }
+.nav-logo:hover::after { width: 100%; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  margin-left: auto;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--bone-dim);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-links a::before {
+  content: '✦';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 6px;
+  color: var(--blood-bright);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--bone); }
+.nav-links a:hover::before { opacity: 1; }
+
+.nav-count {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  color: var(--blood-pale);
+  letter-spacing: 0.2em;
+  margin-left: 40px;
+  border-left: 1px solid var(--blood-pale);
+  padding-left: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════════════════════════ */
 .hero {
-  position: relative; width: 100%; min-height: 100vh;
-  overflow: hidden; background: var(--dk);
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding-bottom: 68px;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--void);
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
+
+/* Radial blood vignette */
 .hero::before {
-  content:''; position:absolute; inset:0;
-  background: repeating-linear-gradient(-52deg,transparent,transparent 44px,rgba(200,0,26,0.018) 44px,rgba(200,0,26,0.018) 45px);
-  pointer-events:none; z-index:1;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139,0,0,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%, rgba(139,0,0,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(2,1,4,0.9) 100%);
+  pointer-events: none;
+  z-index: 2;
 }
-.ht-ghost {
-  position:absolute; top:-30px; left:-10px;
-  font-family:'Bebas Neue',sans-serif; font-size:clamp(140px,23vw,260px);
-  line-height:.86; color:transparent; -webkit-text-stroke:1px var(--r);
-  z-index:9; user-select:none; pointer-events:none; opacity:.2;
-}
-.ht {
-  position:absolute; top:-30px; left:-10px;
-  font-family:'Bebas Neue',sans-serif; font-size:clamp(140px,23vw,260px);
-  line-height:.86; color:var(--w); z-index:10; user-select:none; pointer-events:none;
-}
-.tr-cluster { position:absolute; top:26px; right:30px; z-index:20; text-align:right; }
-.tag-box {
-  display:inline-block; font-family:'Bebas Neue',sans-serif;
-  font-size:13px; letter-spacing:.35em; color:var(--g);
-  border:1.5px solid var(--g); padding:5px 15px; margin-bottom:6px;
-}
-.sub-tag { font-size:8px; letter-spacing:.22em; color:rgba(200,144,26,.45); }
-.v-label {
-  position:absolute; top:28%; right:-42px;
-  font-family:'Bebas Neue',sans-serif; font-size:clamp(58px,9vw,92px);
-  color:var(--r); letter-spacing:.05em; opacity:.45;
-  transform:rotate(90deg); transform-origin:right top;
-  z-index:8; user-select:none;
-}
-.dark-col {
-  position:absolute; right:0; top:0; width:32%; height:88%;
-  background:var(--mdk); border-left:1px solid #200a0a; z-index:6;
-}
-.count-block {
-  position:absolute; right:0; top:20%; width:32%; z-index:14; padding:0 32px; text-align:right;
-}
-.count-num { font-family:'Bebas Neue',sans-serif; font-size:clamp(70px,11vw,115px); color:var(--r); line-height:.9; }
-.count-label { font-size:8px; letter-spacing:.35em; color:#3e1e1e; margin-top:8px; }
-.count-sub { font-family:'IM Fell English',serif; font-style:italic; font-size:clamp(11px,1.3vw,14px); color:rgba(240,232,216,.24); margin-top:14px; line-height:1.7; }
 
-/* 3 floating previews */
-.hero-collage { position:absolute; left:0; bottom:80px; width:68%; height:72%; z-index:7; pointer-events:none; }
-.hc-img { position:absolute; overflow:hidden; }
-.hc-img img { width:100%; height:100%; object-fit:cover; display:block; }
-.hc-1 { width:28%; aspect-ratio:3/4; bottom:0; left:5%; transform:rotate(-2deg); border:1px solid #1a0808; }
-.hc-2 { width:22%; aspect-ratio:1/1; bottom:18%; left:30%; transform:rotate(1.5deg); border:1px solid #1a0808; opacity:.8; }
-.hc-3 { width:26%; aspect-ratio:3/4; bottom:5%; left:48%; transform:rotate(-1deg); border:1px solid #300a0a; opacity:.65; }
-
-.eye { position:absolute; pointer-events:none; user-select:none; }
-@keyframes breathe { 0%,100%{opacity:.12;} 50%{opacity:.24;} }
-@keyframes breathe2 { 0%,100%{opacity:.07;} 50%{opacity:.17;} }
-.b1 { animation:breathe 4.5s ease-in-out infinite; }
-.b2 { animation:breathe2 6.5s ease-in-out infinite; }
-
-.rblock {
-  position:absolute; bottom:100px; left:0; width:min(44%,420px);
-  background:var(--r); z-index:12; padding:22px 26px;
-  clip-path:polygon(0 0,100% 0,100% 86%,96% 92%,92% 86%,88% 92%,84% 86%,79% 91%,75% 86%,70% 91%,65% 85%,60% 90%,55% 85%,50% 90%,45% 84%,40% 89%,35% 84%,30% 89%,25% 83%,20% 88%,15% 83%,10% 88%,5% 82%,0 87%);
+/* Diagonal rule lines */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      -62deg,
+      transparent,
+      transparent 80px,
+      rgba(139,0,0,0.025) 80px,
+      rgba(139,0,0,0.025) 81px
+    );
+  pointer-events: none;
+  z-index: 1;
 }
-.rq { font-family:'IM Fell English',serif; font-style:italic; font-size:clamp(13px,1.6vw,18px); line-height:1.5; color:var(--w); }
-.rq-attr { font-size:8px; letter-spacing:.18em; color:rgba(240,232,216,.62); margin-top:8px; }
 
-.hbar {
-  position:relative; z-index:22; height:68px; background:#000;
-  border-top:1.5px solid var(--r);
-  display:flex; align-items:center; padding:0 28px; gap:24px; flex-shrink:0;
+/* Giant ghost title */
+.hero-ghost-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(120px, 22vw, 280px);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(139,0,0,0.15);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  letter-spacing: -0.02em;
 }
-.hbar-name { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.5em; color:var(--w); white-space:nowrap; }
-.hbar-sep { width:1px; height:26px; background:#2a1010; flex-shrink:0; }
-.hbar-link { font-size:8px; letter-spacing:.2em; color:#555; text-decoration:none; white-space:nowrap; transition:color .2s; }
-.hbar-link:hover { color:var(--r); }
 
-/* ══ GRID ══ */
-.grid-section { background:var(--mdk); padding:80px 0 0; position:relative; overflow:hidden; }
-.gs-ghost {
-  position:absolute; top:-10px; left:10px;
-  font-family:'Bebas Neue',sans-serif; font-size:220px;
-  color:rgba(200,0,26,.04); line-height:1; pointer-events:none; user-select:none;
+/* Drip SVG top border */
+.hero-drip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 10;
+  pointer-events: none;
 }
-.gs-head { padding:0 40px 50px; position:relative; z-index:5; }
-.gs-label { font-size:8px; letter-spacing:.4em; color:var(--r); margin-bottom:10px; }
-.gs-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,7.5vw,82px); line-height:.9; }
 
-.sk {
-  position:relative; overflow:hidden; border:1px solid #1a0808;
-  cursor:crosshair; transition:transform .3s ease;
+/* Main hero content grid */
+.hero-inner {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  padding-top: 64px;
 }
-.sk:hover { transform:scale(1.022) translateY(-3px); z-index:20; }
-.sk:hover .sk-overlay { opacity:1; }
-.sk:hover .sk-img img { transform:scale(1.05); }
 
-.sk-img { width:100%; display:block; overflow:hidden; }
-.sk-img img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
-.sk-img.sq { aspect-ratio:1/1; }
-.sk-img.port { aspect-ratio:3/4; }
-.sk-img.wide { aspect-ratio:4/3; }
-
-.sk-overlay {
-  position:absolute; inset:0; background:rgba(6,4,8,.84);
-  opacity:0; transition:opacity .3s ease; z-index:5;
-  display:flex; flex-direction:column; justify-content:flex-end; padding:22px 18px;
-  border-top:2px solid var(--r);
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 80px 60px;
+  position: relative;
 }
-.sk-ov-num { font-family:'Bebas Neue',sans-serif; font-size:52px; color:rgba(200,0,26,.25); line-height:1; }
-.sk-ov-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.04em; color:var(--w); line-height:1; margin-top:4px; }
-.sk-ov-sub { font-size:8px; letter-spacing:.22em; color:rgba(240,232,216,.55); margin-top:5px; }
-.sk-label {
-  background:#070306; padding:11px 16px;
-  display:flex; justify-content:space-between; align-items:center;
-  border-top:1px solid #1a0808;
-}
-.sk-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:rgba(200,0,26,.35); }
-.sk-name { font-size:8px; letter-spacing:.14em; color:rgba(240,232,216,.5); }
-.sk-med { font-size:7px; letter-spacing:.1em; color:#2e1818; margin-top:2px; }
 
-.cg { padding:0 40px; }
-.row { display:grid; }
-.r1 { grid-template-columns:1.2fr .9fr 1fr; }
-.r2 { grid-template-columns:.85fr 1.35fr .85fr; }
-
-.lift { margin-top:-52px; }
-.drop { margin-top:52px; }
-.lift2 { margin-top:-28px; }
-.drop2 { margin-top:28px; }
-.sk.accent { border-color:var(--r); }
-
-/* ══ ABOUT ══ */
-.about-strip {
-  background:var(--r); padding:44px 40px;
-  display:grid; grid-template-columns:1fr 1fr 1fr; gap:0;
-  position:relative; overflow:hidden;
+.hero-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.55em;
+  color: var(--blood-bright);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.about-strip::before {
-  content:'✦'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-size:280px; color:rgba(0,0,0,.05); pointer-events:none; user-select:none;
-}
-.as-col { position:relative; z-index:2; }
-.as-col + .as-col { border-left:1px solid rgba(0,0,0,.15); padding-left:36px; }
-.as-head { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:.04em; color:var(--w); margin-bottom:10px; }
-.as-body { font-size:9px; line-height:1.9; color:rgba(240,232,216,.75); }
 
-/* ══ CONTACT ══ */
-.contact { background:var(--dk); padding:90px 40px 80px; position:relative; overflow:hidden; }
-.contact::before {
-  content:'REACH'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-family:'Bebas Neue',sans-serif; font-size:clamp(80px,18vw,200px);
-  color:rgba(200,0,26,.03); letter-spacing:.08em; white-space:nowrap; pointer-events:none; user-select:none;
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blood-bright);
 }
-.ct-label { font-size:8px; letter-spacing:.4em; color:var(--r); margin-bottom:16px; position:relative; z-index:5; }
-.ct-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(48px,9vw,100px); line-height:.9; position:relative; z-index:5; margin-bottom:50px; }
-.ct-links { display:flex; flex-wrap:wrap; gap:0; position:relative; z-index:5; }
-.ct-item {
-  border:1px solid #200a0a; padding:26px 36px; min-width:210px;
-  text-decoration:none; display:block; transition:background .2s, border-color .2s;
-}
-.ct-item:hover { background:var(--r); border-color:var(--r); }
-.ct-item:hover .ct-handle, .ct-item:hover .ct-platform { color:var(--w); }
-.ct-platform { font-size:7px; letter-spacing:.35em; color:#3a1818; margin-bottom:6px; transition:color .2s; }
-.ct-handle { font-family:'Bebas Neue',sans-serif; font-size:clamp(18px,2.2vw,26px); letter-spacing:.03em; color:var(--w); line-height:1; transition:color .2s; }
 
-/* ══ FOOTER ══ */
+.hero-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 12vw, 160px);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.hero-name .glitch-char {
+  display: inline-block;
+  position: relative;
+}
+
+.hero-name .glitch-char::before,
+.hero-name .glitch-char::after {
+  content: attr(data-char);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.hero-name .glitch-char::before {
+  color: var(--glitch-r);
+  animation: glitch-before 8s infinite;
+}
+
+.hero-name .glitch-char::after {
+  color: var(--glitch-b);
+  animation: glitch-after 8s infinite;
+}
+
+@keyframes glitch-before {
+  0%, 92%, 100% { opacity: 0; transform: none; }
+  93% { opacity: 0.8; transform: translate(-3px, 1px); clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); }
+  94% { opacity: 0; }
+  96% { opacity: 0.6; transform: translate(3px, -2px); clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+  97% { opacity: 0; }
+}
+
+@keyframes glitch-after {
+  0%, 92%, 100% { opacity: 0; transform: none; }
+  93.5% { opacity: 0.7; transform: translate(3px, -1px); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
+  94.5% { opacity: 0; }
+  96.5% { opacity: 0.5; transform: translate(-2px, 2px); clip-path: polygon(0 0%, 100% 0%, 100% 20%, 0 20%); }
+  97.5% { opacity: 0; }
+}
+
+.hero-subtitle {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2.2vw, 26px);
+  color: var(--blood-bright);
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+.hero-desc {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(14px, 1.4vw, 17px);
+  line-height: 1.9;
+  color: var(--bone-dim);
+  max-width: 420px;
+  margin-bottom: 48px;
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid var(--blood-pale);
+}
+
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: var(--blood-bright);
+  color: var(--bone);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, transform 0.2s ease;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bone);
+  transform: translateX(-101%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary:hover { color: var(--blood-bright); }
+.btn-primary span { position: relative; z-index: 1; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  border: 1px solid var(--bone-ghost);
+  color: var(--bone-dim);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-decoration: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--bone-dim);
+  color: var(--bone);
+}
+
+/* Hero right — image collage */
+.hero-right {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--void) 0%, transparent 30%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-collage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hc-piece {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(139,0,0,0.3);
+}
+
+.hc-piece img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.1) brightness(0.75) saturate(0.7);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+.hc-piece:hover img {
+  filter: contrast(1.2) brightness(0.9) saturate(0.5);
+  transform: scale(1.04);
+}
+
+.hc-piece::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(139,0,0,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hc-1 { top: 10%; left: 5%; width: 45%; height: 55%; transform: rotate(-1.5deg); }
+.hc-2 { top: 5%; right: 5%; width: 40%; height: 45%; transform: rotate(2deg); }
+.hc-3 { bottom: 8%; left: 15%; width: 38%; height: 42%; transform: rotate(1deg); }
+.hc-4 { bottom: 12%; right: 8%; width: 35%; height: 40%; transform: rotate(-2.5deg); }
+
+/* Floating horror ornaments */
+.hero-ornament {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 6;
+}
+
+/* Vertical text label */
+.hero-vert-label {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  color: var(--blood-pale);
+  white-space: nowrap;
+  z-index: 8;
+}
+
+/* Floating eye motifs */
+.float-eye {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 7;
+  animation: eye-breathe 4s ease-in-out infinite;
+}
+
+@keyframes eye-breathe {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.05); }
+}
+
+.float-eye:nth-child(2) { animation-delay: -1.5s; animation-duration: 5.5s; }
+.float-eye:nth-child(3) { animation-delay: -3s; animation-duration: 3.8s; }
+.float-eye:nth-child(4) { animation-delay: -0.8s; animation-duration: 6.2s; }
+.float-eye:nth-child(5) { animation-delay: -2.2s; animation-duration: 4.8s; }
+
+/* Hero bottom bar */
+.hero-bar {
+  position: relative;
+  z-index: 10;
+  background: rgba(2,1,4,0.9);
+  border-top: 1px solid var(--blood-pale);
+  padding: 0 60px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.hero-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--blood-bright), transparent);
+}
+
+.hbar-stat {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+  border-right: 1px solid rgba(139,0,0,0.2);
+}
+
+.hbar-stat:first-child { padding-left: 0; }
+
+.hbar-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--blood-bright);
+  line-height: 1;
+}
+
+.hbar-stat-label {
+  font-size: 7px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+  margin-top: 2px;
+}
+
+.hbar-marquee {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 32px;
+}
+
+.hbar-marquee-inner {
+  display: flex;
+  gap: 60px;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.hbar-marquee-item {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+  flex-shrink: 0;
+}
+
+.hbar-marquee-item span {
+  color: var(--blood-bright);
+  margin: 0 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION DIVIDERS — HORROR DRIP / TORN PAPER
+═══════════════════════════════════════════════════════════════ */
+.divider-drip {
+  position: relative;
+  height: 60px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.divider-drip svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MANIFESTO STRIP
+═══════════════════════════════════════════════════════════════ */
+.manifesto {
+  position: relative;
+  background: var(--void-mid);
+  padding: 100px 60px;
+  overflow: hidden;
+}
+
+.manifesto::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 120px,
+      rgba(139,0,0,0.02) 120px,
+      rgba(139,0,0,0.02) 121px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 120px,
+      rgba(139,0,0,0.02) 120px,
+      rgba(139,0,0,0.02) 121px
+    );
+  pointer-events: none;
+}
+
+.manifesto-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.manifesto-label-col {
+  position: sticky;
+  top: 100px;
+}
+
+.manifesto-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.6em;
+  color: var(--blood-bright);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.manifesto-label::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--blood-bright);
+}
+
+.manifesto-side-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 12vw, 140px);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(139,0,0,0.2);
+  user-select: none;
+}
+
+.manifesto-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.manifesto-quote {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(22px, 3.5vw, 42px);
+  line-height: 1.4;
+  color: var(--bone);
+  position: relative;
+  padding-left: 32px;
+}
+
+.manifesto-quote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -10px;
+  font-size: 80px;
+  color: var(--blood-bright);
+  opacity: 0.3;
+  line-height: 1;
+  font-family: 'IM Fell English', serif;
+}
+
+.manifesto-body {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 2;
+  color: var(--bone-dim);
+  columns: 2;
+  column-gap: 40px;
+}
+
+.manifesto-body p + p {
+  margin-top: 1em;
+}
+
+.manifesto-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.m-tag {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+  border: 1px solid var(--bone-ghost);
+  padding: 6px 14px;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.m-tag:hover {
+  border-color: var(--blood-bright);
+  color: var(--blood-bright);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GALLERY SECTION
+═══════════════════════════════════════════════════════════════ */
+.gallery-section {
+  position: relative;
+  background: var(--void);
+  padding: 100px 0 0;
+  overflow: hidden;
+}
+
+/* Huge ghost number */
+.gallery-ghost-num {
+  position: absolute;
+  top: 20px;
+  right: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(200px, 30vw, 380px);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(139,0,0,0.06);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.gallery-header {
+  position: relative;
+  z-index: 5;
+  padding: 0 60px 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.gallery-title-block {}
+
+.gallery-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.55em;
+  color: var(--blood-bright);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gallery-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blood-bright);
+}
+
+.gallery-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 8vw, 100px);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+}
+
+.gallery-title em {
+  font-style: normal;
+  color: var(--blood-bright);
+  -webkit-text-stroke: 0;
+}
+
+.gallery-filter-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.filter-btn {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  background: none;
+  cursor: none;
+  transition: all 0.3s ease;
+  font-family: 'Space Mono', monospace;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  color: var(--bone);
+  border-color: var(--blood-pale);
+}
+
+.filter-btn.active {
+  background: var(--blood-pale);
+  color: var(--blood-bright);
+  border-color: var(--blood-bright);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GALLERY GRID — 3 cols × 4 rows, uniform cells, images fill
+═══════════════════════════════════════════════════════════════ */
+.gallery-grid {
+  padding: 0 40px 80px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+/* card 10 spans full width */
+.art-card[data-index="9"] {
+  grid-column: 1 / -1;
+}
+
+/* base card — height driven by image */
+.art-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--void-mid);
+  outline: 1px solid rgba(139,0,0,0.6);
+  outline-offset: -4px;
+  border: 1px solid rgba(139,0,0,0.25);
+  cursor: none;
+}
+
+/* image sits naturally, no cropping, no letterbox */
+.art-img {
+  display: block;
+  width: 100%;
+  line-height: 0;
+}
+
+.art-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: contrast(1.02) brightness(0.92) saturate(0.8);
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.art-card:hover .art-img img {
+  transform: scale(1.03);
+  filter: contrast(1.05) brightness(0.98) saturate(0.75);
+}
+
+/* overlay sits on top of image */
+.art-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(2,1,4,0.94) 0%, rgba(2,1,4,0.3) 45%, transparent 75%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+.art-card:hover .art-overlay { opacity: 1; }
+
+/* title + meta inside overlay */
+.art-info {
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.art-card:hover .art-info { transform: translateY(0); opacity: 1; }
+
+.art-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 0.05em;
+  color: var(--bone);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.art-meta {
+  font-size: 7px;
+  letter-spacing: 0.28em;
+  color: var(--bone-dim);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.art-meta-dot {
+  width: 3px; height: 3px;
+  background: var(--blood-bright);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ghost number top-right */
+.art-num {
+  position: absolute;
+  top: 10px; right: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  color: rgba(139,0,0,0.12);
+  line-height: 1;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.art-card:hover .art-num { opacity: 1; }
+
+/* corner brackets — horror UI detail */
+.art-corner-tl,
+.art-corner-br {
+  position: absolute;
+  width: 0; height: 0;
+  transition: width 0.3s ease, height 0.3s ease;
+  z-index: 4;
+}
+.art-corner-tl {
+  top: 8px; left: 8px;
+  border-top: 1px solid var(--blood-bright);
+  border-left: 1px solid var(--blood-bright);
+}
+.art-corner-br {
+  bottom: 8px; right: 8px;
+  border-bottom: 1px solid var(--blood-bright);
+  border-right: 1px solid var(--blood-bright);
+}
+.art-card:hover .art-corner-tl,
+.art-card:hover .art-corner-br { width: 24px; height: 24px; }
+
+/* label strip slides up from bottom */
+.art-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 3;
+  background: rgba(2,1,4,0.92);
+  padding: 9px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(139,0,0,0.4);
+  transform: translateY(100%);
+  transition: transform 0.32s ease;
+}
+.art-card:hover .art-label { transform: translateY(0); }
+
+.art-label-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: rgba(139,0,0,0.5);
+  line-height: 1;
+}
+.art-label-name {
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: var(--bone-ghost);
+}
+.art-label-med {
+  font-size: 6px;
+  letter-spacing: 0.12em;
+  color: rgba(58,48,40,0.7);
+  margin-top: 2px;
+}
+
+/* accent variant */
+.art-card.accent-border {
+  border-color: rgba(139,0,0,0.5);
+  outline-color: rgba(139,0,0,0.9);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHTBOX / FULLSCREEN VIEWER
+═══════════════════════════════════════════════════════════════ */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  background: rgba(2,1,4,0.97);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  cursor: none;
+}
+
+#lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lb-inner {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.lb-img-wrap {
+  position: relative;
+  max-height: 85vh;
+  overflow: hidden;
+}
+
+.lb-img-wrap img {
+  max-height: 85vh;
+  max-width: 70vw;
+  object-fit: contain;
+  display: block;
+  filter: contrast(1.05) brightness(0.9);
+  animation: lb-reveal 0.5s ease forwards;
+}
+
+@keyframes lb-reveal {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.lb-img-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(139,0,0,0.3);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.lb-info {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.lb-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(139,0,0,0.15);
+  line-height: 0.85;
+  margin-bottom: 16px;
+}
+
+.lb-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.lb-meta {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+  margin-bottom: 24px;
+  line-height: 2;
+}
+
+.lb-desc {
+  font-family: 'Crimson Text', serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--bone-dim);
+  border-left: 2px solid var(--blood-pale);
+  padding-left: 16px;
+  margin-bottom: 32px;
+}
+
+.lb-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.lb-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--bone-ghost);
+  background: none;
+  color: var(--bone-dim);
+  font-size: 18px;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: 'Space Mono', monospace;
+}
+
+.lb-btn:hover {
+  border-color: var(--blood-bright);
+  color: var(--blood-bright);
+  background: rgba(139,0,0,0.1);
+}
+
+.lb-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--bone-ghost);
+  background: none;
+  color: var(--bone-dim);
+  font-size: 16px;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: 'Space Mono', monospace;
+}
+
+.lb-close:hover {
+  border-color: var(--blood-bright);
+  color: var(--blood-bright);
+}
+
+.lb-progress {
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--bone-ghost);
+}
+
+.lb-progress-fill {
+  height: 100%;
+  background: var(--blood-bright);
+  transition: width 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HORROR INTERLUDE — FULL BLEED QUOTE
+═══════════════════════════════════════════════════════════════ */
+.horror-interlude {
+  position: relative;
+  background: var(--blood-bright);
+  padding: 100px 60px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.horror-interlude::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 500px;
+  color: rgba(0,0,0,0.06);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.horror-interlude::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 20px,
+    rgba(0,0,0,0.03) 20px,
+    rgba(0,0,0,0.03) 21px
+  );
+  pointer-events: none;
+}
+
+.hi-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hi-quote {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(24px, 4vw, 52px);
+  line-height: 1.35;
+  color: var(--bone);
+  margin-bottom: 24px;
+}
+
+.hi-attr {
+  font-size: 9px;
+  letter-spacing: 0.5em;
+  color: rgba(232,220,200,0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ABOUT SECTION
+═══════════════════════════════════════════════════════════════ */
+.about-section {
+  position: relative;
+  background: var(--void-mid);
+  padding: 120px 60px;
+  overflow: hidden;
+}
+
+.about-section::before {
+  content: 'ARTIST';
+  position: absolute;
+  bottom: -40px;
+  right: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 18vw, 220px);
+  color: rgba(139,0,0,0.04);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.about-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.about-left {}
+
+.about-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.55em;
+  color: var(--blood-bright);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.about-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blood-bright);
+}
+
+.about-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.88;
+  margin-bottom: 40px;
+}
+
+.about-title em {
+  font-style: normal;
+  color: var(--blood-bright);
+}
+
+.about-portrait {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.about-portrait-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(139,0,0,0.3);
+}
+
+.about-portrait-frame img {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.1) brightness(0.75) saturate(0.5) sepia(0.2);
+}
+
+.about-portrait-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(139,0,0,0.2) 0%,
+    transparent 50%,
+    rgba(2,1,4,0.4) 100%
+  );
+  pointer-events: none;
+}
+
+.about-portrait-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-size: 7px;
+  letter-spacing: 0.3em;
+  color: var(--bone-dim);
+  background: rgba(2,1,4,0.8);
+  padding: 6px 12px;
+  border-left: 2px solid var(--blood-bright);
+}
+
+.about-right {
+  padding-top: 60px;
+}
+
+.about-text {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(16px, 1.6vw, 20px);
+  line-height: 1.9;
+  color: var(--bone-dim);
+  margin-bottom: 32px;
+}
+
+.about-text strong {
+  color: var(--bone);
+  font-weight: 600;
+}
+
+.about-text em {
+  color: var(--blood-bright);
+  font-style: italic;
+}
+
+.about-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--blood-pale);
+  margin: 32px 0;
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 40px;
+}
+
+.about-stat {
+  background: var(--void);
+  padding: 24px 20px;
+  border: 1px solid rgba(139,0,0,0.15);
+  transition: border-color 0.3s ease;
+}
+
+.about-stat:hover {
+  border-color: rgba(139,0,0,0.4);
+}
+
+.about-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--blood-bright);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.about-stat-label {
+  font-size: 7px;
+  letter-spacing: 0.3em;
+  color: var(--bone-ghost);
+}
+
+.about-interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.interest-tag {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: var(--bone-ghost);
+  border: 1px solid rgba(58,48,40,0.5);
+  padding: 7px 14px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.interest-tag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--blood-pale);
+  transform: translateX(-101%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.interest-tag:hover::before { transform: translateX(0); }
+.interest-tag:hover { color: var(--blood-bright); border-color: var(--blood-pale); }
+.interest-tag span { position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PROCESS SECTION — HORROR ZINE STYLE
+═══════════════════════════════════════════════════════════════ */
+.process-section {
+  position: relative;
+  background: var(--void);
+  padding: 120px 60px;
+  overflow: hidden;
+}
+
+.process-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(139,0,0,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.process-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.process-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
+.process-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.55em;
+  color: var(--blood-bright);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.process-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blood-bright);
+}
+
+.process-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.88;
+}
+
+.process-title em {
+  font-style: normal;
+  color: var(--blood-bright);
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+
+.process-step {
+  position: relative;
+  background: var(--void-mid);
+  padding: 40px 28px;
+  border: 1px solid rgba(139,0,0,0.1);
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.process-step:hover {
+  border-color: rgba(139,0,0,0.4);
+  background: var(--void-light);
+}
+
+.process-step::before {
+  content: attr(data-step);
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  color: rgba(139,0,0,0.05);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.process-step:hover::before {
+  color: rgba(139,0,0,0.1);
+}
+
+.process-step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--blood-bright);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.process-step-num::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(139,0,0,0.2);
+}
+
+.process-step-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: block;
+  filter: grayscale(1) brightness(0.6);
+  transition: filter 0.3s ease;
+}
+
+.process-step:hover .process-step-icon {
+  filter: grayscale(0.3) brightness(0.9);
+}
+
+.process-step-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  margin-bottom: 12px;
+}
+
+.process-step-text {
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--bone-ghost);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HORROR TICKER / MARQUEE BAND
+═══════════════════════════════════════════════════════════════ */
+.ticker-band {
+  position: relative;
+  background: var(--blood-bright);
+  padding: 16px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+.ticker-band::before,
+.ticker-band::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ticker-band::before {
+  left: 0;
+  background: linear-gradient(to right, var(--blood-bright), transparent);
+}
+
+.ticker-band::after {
+  right: 0;
+  background: linear-gradient(to left, var(--blood-bright), transparent);
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 0;
+  animation: ticker-scroll 25s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  color: rgba(232,220,200,0.9);
+  padding: 0 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.ticker-item::after {
+  content: '✦';
+  font-size: 8px;
+  color: rgba(232,220,200,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTACT SECTION
+═══════════════════════════════════════════════════════════════ */
+.contact-section {
+  position: relative;
+  background: var(--void-mid);
+  padding: 120px 60px;
+  overflow: hidden;
+}
+
+.contact-section::before {
+  content: 'REACH';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 18vw, 240px);
+  color: rgba(139,0,0,0.03);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.contact-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+
+.contact-left {}
+
+.contact-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.55em;
+  color: var(--blood-bright);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contact-eyebrow::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blood-bright);
+}
+
+.contact-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 8vw, 100px);
+  line-height: 0.88;
+  margin-bottom: 32px;
+}
+
+.contact-title em {
+  font-style: normal;
+  color: var(--blood-bright);
+}
+
+.contact-desc {
+  font-family: 'Crimson Text', serif;
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.9;
+  color: var(--bone-dim);
+  max-width: 400px;
+  margin-bottom: 48px;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border: 1px solid rgba(139,0,0,0.15);
+  text-decoration: none;
+  background: var(--void);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  group: true;
+}
+
+.contact-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--blood-bright);
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 0;
+}
+
+.contact-link:hover::before { transform: translateX(0); }
+.contact-link:hover .cl-platform,
+.contact-link:hover .cl-handle,
+.contact-link:hover .cl-arrow { color: var(--bone); }
+.contact-link:hover { border-color: var(--blood-bright); }
+
+.cl-left {
+  position: relative;
+  z-index: 1;
+}
+
+.cl-platform {
+  font-size: 7px;
+  letter-spacing: 0.4em;
+  color: var(--bone-ghost);
+  margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+.cl-handle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18px, 2.2vw, 26px);
+  letter-spacing: 0.03em;
+  color: var(--bone);
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.cl-arrow {
+  position: relative;
+  z-index: 1;
+  font-size: 18px;
+  color: var(--bone-ghost);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.contact-link:hover .cl-arrow {
+  transform: translate(4px, -4px);
+}
+
+/* Contact right — form */
+.contact-right {}
+
+.contact-form-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.contact-form-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(139,0,0,0.2);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form-field {
+  position: relative;
+}
+
+.form-field label {
+  display: block;
+  font-size: 7px;
+  letter-spacing: 0.4em;
+  color: var(--bone-ghost);
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.form-field input,
+.form-field textarea {
+  width: 100%;
+  background: var(--void);
+  border: 1px solid rgba(139,0,0,0.15);
+  color: var(--bone);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  resize: none;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: var(--blood-bright);
+  background: var(--void-light);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--bone-ghost);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.form-field textarea {
+  height: 140px;
+}
+
+.form-submit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.form-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: var(--blood-bright);
+  color: var(--bone);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  border: none;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.form-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bone);
+  transform: translateX(-101%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.form-submit-btn:hover::before { transform: translateX(0); }
+.form-submit-btn:hover { color: var(--blood-bright); }
+.form-submit-btn span { position: relative; z-index: 1; }
+
+.form-note {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--bone-ghost);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════ */
 footer {
-  background:#000; padding:60px 40px 36px; text-align:center;
-  position:relative; overflow:hidden; border-top:1px solid #1a0808;
+  position: relative;
+  background: var(--void);
+  border-top: 1px solid rgba(139,0,0,0.2);
+  overflow: hidden;
 }
-footer::before {
-  content:'ASHIKUR'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,17vw,185px);
-  color:rgba(200,0,26,.03); letter-spacing:.1em; white-space:nowrap; pointer-events:none;
+
+.footer-top {
+  padding: 80px 60px 60px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  border-bottom: 1px solid rgba(139,0,0,0.1);
 }
-.ft-name { font-family:'Bebas Neue',sans-serif; font-size:clamp(34px,6.5vw,68px); letter-spacing:.5em; color:var(--w); position:relative; z-index:1; }
-.ft-tag { font-size:8px; letter-spacing:.22em; color:#2e1818; margin-top:10px; position:relative; z-index:1; }
-.ft-yr { font-size:7px; color:#1a0a0a; margin-top:28px; letter-spacing:.12em; position:relative; z-index:1; }
+
+.footer-brand {}
+
+.footer-logo {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: 42px;
+  color: var(--bone);
+  display: block;
+  margin-bottom: 16px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-logo:hover { color: var(--blood-bright); }
+
+.footer-tagline {
+  font-family: 'Crimson Text', serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bone-dim);
+  max-width: 280px;
+  margin-bottom: 24px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 8px;
+}
+
+.footer-social-link {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(139,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 12px;
+  color: var(--bone-ghost);
+  transition: all 0.3s ease;
+}
+
+.footer-social-link:hover {
+  border-color: var(--blood-bright);
+  color: var(--blood-bright);
+  background: rgba(139,0,0,0.1);
+}
+
+.footer-col-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--blood-bright);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(139,0,0,0.2);
+}
+
+.footer-col-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col-links a {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--bone-ghost);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-col-links a::before {
+  content: '✦';
+  color: var(--blood-pale);
+  font-size: 6px;
+}
+
+.footer-col-links a:hover { color: var(--bone); }
+
+.footer-bottom {
+  padding: 24px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-copy {
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: var(--bone-ghost);
+}
+
+.footer-ghost-name {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(60px, 16vw, 180px);
+  color: rgba(139,0,0,0.03);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.footer-credits {
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  color: rgba(58,48,40,0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL PROGRESS BAR
+═══════════════════════════════════════════════════════════════ */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--blood-bright);
+  z-index: 99999;
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--blood-bright);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BACK TO TOP
+═══════════════════════════════════════════════════════════════ */
+#back-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 48px;
+  height: 48px;
+  background: var(--void-mid);
+  border: 1px solid rgba(139,0,0,0.3);
+  color: var(--bone-dim);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  z-index: 9000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+#back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#back-to-top:hover {
+  background: var(--blood-bright);
+  border-color: var(--blood-bright);
+  color: var(--bone);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GLITCH TEXT UTILITY
+═══════════════════════════════════════════════════════════════ */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: var(--glitch-r);
+  animation: glitch-1 6s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+}
+
+.glitch-text::after {
+  color: var(--glitch-b);
+  animation: glitch-2 6s infinite;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+@keyframes glitch-1 {
+  0%, 85%, 100% { transform: none; opacity: 0; }
+  86% { transform: translate(-3px, 0); opacity: 0.7; }
+  87% { transform: translate(3px, 0); opacity: 0.5; }
+  88% { transform: none; opacity: 0; }
+  92% { transform: translate(-2px, 1px); opacity: 0.6; }
+  93% { opacity: 0; }
+}
+
+@keyframes glitch-2 {
+  0%, 85%, 100% { transform: none; opacity: 0; }
+  86.5% { transform: translate(3px, 0); opacity: 0.6; }
+  87.5% { transform: translate(-3px, 0); opacity: 0.4; }
+  88.5% { transform: none; opacity: 0; }
+  92.5% { transform: translate(2px, -1px); opacity: 0.5; }
+  93.5% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { padding: 100px 40px 60px; }
+  .manifesto-inner { grid-template-columns: 1fr; gap: 40px; }
+  .manifesto-label-col { position: static; }
+  .manifesto-body { columns: 1; }
+  .about-inner { grid-template-columns: 1fr; gap: 60px; }
+  .contact-inner { grid-template-columns: 1fr; gap: 60px; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .art-card[data-index="9"] { grid-column: 1 / -1; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .hero-left { padding: 80px 24px 40px; }
+  .hero-bar { padding: 0 24px; gap: 0; }
+  .hbar-stat { padding: 0 16px; }
+  .manifesto { padding: 60px 24px; }
+  .gallery-section { padding: 60px 0 0; }
+  .gallery-header { padding: 0 24px 40px; flex-direction: column; align-items: flex-start; gap: 24px; }
+  .gallery-grid {
+    padding: 0 16px 60px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 240px;
+  }
+  .art-card[data-index="9"] { grid-column: 1 / -1; }
+  .horror-interlude { padding: 60px 24px; }
+  .about-section { padding: 60px 24px; }
+  .process-section { padding: 60px 24px; }
+  .process-steps { grid-template-columns: 1fr; }
+  .contact-section { padding: 60px 24px; }
+  .footer-top { padding: 60px 24px 40px; grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+  .lb-inner { flex-direction: column; max-width: 95vw; }
+  .lb-img-wrap img { max-width: 90vw; max-height: 60vh; }
+  .lb-info { width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HORROR DECORATIVE ELEMENTS
+═══════════════════════════════════════════════════════════════ */
+.horror-cross {
+  display: inline-block;
+  color: var(--blood-bright);
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+
+.blood-line {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--blood-bright), transparent);
+  margin: 40px 0;
+  opacity: 0.3;
+}
+
+.torn-edge {
+  position: relative;
+}
+
+.torn-edge::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: var(--void);
+  clip-path: polygon(
+    0% 100%, 2% 0%, 4% 80%, 6% 20%, 8% 90%, 10% 10%,
+    12% 70%, 14% 30%, 16% 85%, 18% 15%, 20% 75%, 22% 25%,
+    24% 95%, 26% 5%, 28% 80%, 30% 20%, 32% 90%, 34% 10%,
+    36% 70%, 38% 30%, 40% 85%, 42% 15%, 44% 75%, 46% 25%,
+    48% 95%, 50% 5%, 52% 80%, 54% 20%, 56% 90%, 58% 10%,
+    60% 70%, 62% 30%, 64% 85%, 66% 15%, 68% 75%, 70% 25%,
+    72% 95%, 74% 5%, 76% 80%, 78% 20%, 80% 90%, 82% 10%,
+    84% 70%, 86% 30%, 88% 85%, 90% 15%, 92% 75%, 94% 25%,
+    96% 95%, 98% 5%, 100% 100%
+  );
+}
+
+/* Pulsing blood dot */
+@keyframes blood-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,0,26,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(200,0,26,0); }
+}
+
+.blood-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--blood-bright);
+  border-radius: 50%;
+  animation: blood-pulse 2s ease-in-out infinite;
+}
+
+/* Stitch line */
+.stitch-line {
+  width: 100%;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--bone-ghost) 0px,
+    var(--bone-ghost) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.3;
+  margin: 32px 0;
+}
+
 </style>
 </head>
 <body>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
-  <div class="ht-ghost" aria-hidden="true">ASHIKUR</div>
-  <div class="ht" aria-hidden="true">ASHIKUR</div>
-  <div class="tr-cluster">
-    <div><div class="tag-box">SKETCHES</div></div>
-    <div class="sub-tag">DIGITAL · INK · HORROR MANGA · INDIE</div>
+<!-- ═══════════════════════════════════════════════════════════════
+     PERSISTENT UI ELEMENTS
+═══════════════════════════════════════════════════════════════ -->
+<div id="cursor-outer"></div>
+<div id="cursor-inner"></div>
+<div id="noise-overlay" aria-hidden="true"></div>
+<div id="scanlines" aria-hidden="true"></div>
+<div id="scroll-progress" aria-hidden="true"></div>
+<a href="#" id="back-to-top" aria-label="Back to top">↑</a>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LOADING SCREEN
+═══════════════════════════════════════════════════════════════ -->
+<div id="loader" role="status" aria-label="Loading">
+  <div class="loader-eye-container">
+    <svg class="loader-eye" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 40 Q60 4 116 40 Q60 76 4 40Z" fill="none" stroke="#8b0000" stroke-width="1.5"/>
+      <path d="M4 40 Q60 4 116 40 Q60 76 4 40Z" fill="none" stroke="rgba(200,0,26,0.3)" stroke-width="0.5"/>
+      <circle cx="60" cy="40" r="18" fill="#8b0000" opacity="0.8"/>
+      <circle cx="60" cy="40" r="10" fill="#020104"/>
+      <circle cx="54" cy="34" r="3" fill="rgba(232,220,200,0.3)"/>
+      <!-- Eyelashes top -->
+      <line x1="20" y1="22" x2="18" y2="14" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+      <line x1="35" y1="14" x2="34" y2="6" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+      <line x1="52" y1="9" x2="52" y2="1" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+      <line x1="68" y1="9" x2="69" y2="1" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+      <line x1="84" y1="14" x2="86" y2="6" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+      <line x1="98" y1="22" x2="101" y2="14" stroke="#8b0000" stroke-width="0.8" opacity="0.5"/>
+    </svg>
   </div>
-  <div class="v-label">SKETCHES</div>
-  <div class="dark-col"></div>
-  <div class="count-block">
-    <div class="count-num">10</div>
-    <div class="count-label">ORIGINAL WORKS</div>
-    <div class="count-sub">digital art &<br>ink illustrations<br>— Assam, India<br>2024 / 25</div>
+  <div class="loader-text">ENTERING THE DARK</div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="loader-bar"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIGHTBOX
+═══════════════════════════════════════════════════════════════ -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <div class="lb-inner">
+    <button class="lb-close" id="lb-close" aria-label="Close viewer">✕</button>
+    <div class="lb-img-wrap">
+      <img id="lb-img" src="" alt="">
+      <div class="lb-progress">
+        <div class="lb-progress-fill" id="lb-progress-fill"></div>
+      </div>
+    </div>
+    <div class="lb-info">
+      <div class="lb-num" id="lb-num">01</div>
+      <div class="lb-title" id="lb-title">TITLE</div>
+      <div class="lb-meta" id="lb-meta">MEDIUM · DATE</div>
+      <div class="lb-desc" id="lb-desc">Description text here.</div>
+      <div class="lb-nav">
+        <button class="lb-btn" id="lb-prev" aria-label="Previous artwork">←</button>
+        <button class="lb-btn" id="lb-next" aria-label="Next artwork">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════════════ -->
+<nav id="main-nav" role="navigation" aria-label="Main navigation">
+  <a href="#" class="nav-logo" aria-label="Ashikur Home">Ashikur</a>
+  <ul class="nav-links">
+    <li><a href="#sketches">SKETCHES</a></li>
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#process">PROCESS</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+  <div class="nav-count" aria-label="10 works">10 WORKS</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════════ -->
+<section class="hero" aria-label="Hero section">
+
+  <!-- Ghost title -->
+  <div class="hero-ghost-title" aria-hidden="true">ASHIKUR</div>
+
+  <!-- Floating eyes -->
+  <svg class="float-eye" style="top:12%;left:68%;width:32px;height:21px;" viewBox="0 0 60 40" aria-hidden="true">
+    <path d="M2 20 Q30 2 58 20 Q30 38 2 20Z" fill="none" stroke="#8b0000" stroke-width="1.2"/>
+    <circle cx="30" cy="20" r="9" fill="#8b0000" opacity="0.7"/>
+    <circle cx="30" cy="20" r="4" fill="#020104"/>
+    <circle cx="27" cy="17" r="1.5" fill="rgba(232,220,200,0.3)"/>
+  </svg>
+  <svg class="float-eye" style="top:55%;left:74%;width:22px;height:14px;transform:rotate(-8deg);" viewBox="0 0 60 40" aria-hidden="true">
+    <path d="M2 20 Q30 2 58 20 Q30 38 2 20Z" fill="none" stroke="#8b0000" stroke-width="1.2"/>
+    <circle cx="30" cy="20" r="9" fill="#8b0000" opacity="0.7"/>
+    <circle cx="30" cy="20" r="4" fill="#020104"/>
+    <circle cx="27" cy="17" r="1.5" fill="rgba(232,220,200,0.3)"/>
+  </svg>
+  <svg class="float-eye" style="top:7%;left:42%;width:18px;height:12px;" viewBox="0 0 60 40" aria-hidden="true">
+    <path d="M2 20 Q30 2 58 20 Q30 38 2 20Z" fill="none" stroke="#8b0000" stroke-width="1.2"/>
+    <circle cx="30" cy="20" r="9" fill="#8b0000" opacity="0.7"/>
+    <circle cx="30" cy="20" r="4" fill="#020104"/>
+    <circle cx="27" cy="17" r="1.5" fill="rgba(232,220,200,0.3)"/>
+  </svg>
+  <svg class="float-eye" style="top:72%;left:60%;width:26px;height:17px;transform:rotate(5deg);" viewBox="0 0 60 40" aria-hidden="true">
+    <path d="M2 20 Q30 2 58 20 Q30 38 2 20Z" fill="none" stroke="#8b0000" stroke-width="1.2"/>
+    <circle cx="30" cy="20" r="9" fill="#8b0000" opacity="0.7"/>
+    <circle cx="30" cy="20" r="4" fill="#020104"/>
+    <circle cx="27" cy="17" r="1.5" fill="rgba(232,220,200,0.3)"/>
+  </svg>
+  <svg class="float-eye" style="top:35%;left:82%;width:14px;height:9px;transform:rotate(-3deg);" viewBox="0 0 60 40" aria-hidden="true">
+    <path d="M2 20 Q30 2 58 20 Q30 38 2 20Z" fill="none" stroke="#8b0000" stroke-width="1.2"/>
+    <circle cx="30" cy="20" r="9" fill="#8b0000" opacity="0.7"/>
+    <circle cx="30" cy="20" r="4" fill="#020104"/>
+    <circle cx="27" cy="17" r="1.5" fill="rgba(232,220,200,0.3)"/>
+  </svg>
+
+  <!-- Vertical label -->
+  <div class="hero-vert-label" aria-hidden="true">HORROR · SURREALISM · DIGITAL</div>
+
+  <!-- Main content -->
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow reveal">SKETCH PORTFOLIO / ASSAM, INDIA</div>
+      <h1 class="hero-name reveal reveal-delay-1">
+        <span class="glitch-char" data-char="A">A</span><span class="glitch-char" data-char="S">S</span><span class="glitch-char" data-char="H">H</span><span class="glitch-char" data-char="I">I</span><span class="glitch-char" data-char="K">K</span><span class="glitch-char" data-char="U">U</span><span class="glitch-char" data-char="R">R</span>
+      </h1>
+      <div class="hero-subtitle reveal reveal-delay-2">I draw what language refuses to hold.</div>
+      <p class="hero-desc reveal reveal-delay-3">
+        Digital illustrations at the edge of horror manga darkness and intimate warmth. Sometimes in the same piece.
+      </p>
+      <div class="hero-cta-row reveal reveal-delay-4">
+        <a href="#sketches" class="btn-primary"><span>VIEW SKETCHES</span></a>
+        <a href="#contact" class="btn-ghost">GET IN TOUCH</a>
+      </div>
+    </div>
+
+    <div class="hero-right" aria-hidden="true">
+      <div class="hero-collage">
+        <div class="hc-piece hc-1"><img src="sk08.png" alt=""></div>
+        <div class="hc-piece hc-2"><img src="sk03.png" alt=""></div>
+        <div class="hc-piece hc-3"><img src="sk07.png" alt=""></div>
+        <div class="hc-piece hc-4"><img src="sk01.png" alt=""></div>
+      </div>
+    </div>
   </div>
 
-  <div class="hero-collage">
-    <div class="hc-img hc-1"><img src="sk08.png" alt=""></div>
-    <div class="hc-img hc-2"><img src="sk07.png" alt=""></div>
-    <div class="hc-img hc-3"><img src="sk01.png" alt=""></div>
-  </div>
-
-  <svg class="eye b1" style="top:14%;left:70%;width:26px;height:17px;" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 10 Q15 0 29 10 Q15 20 1 10Z" fill="none" stroke="#c8001a" stroke-width="1.2"/>
-    <circle cx="15" cy="10" r="4.5" fill="#c8001a" opacity=".7"/><circle cx="15" cy="10" r="1.8" fill="#060408"/>
-  </svg>
-  <svg class="eye b2" style="top:52%;left:75%;width:20px;height:13px;transform:rotate(-6deg);" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 10 Q15 0 29 10 Q15 20 1 10Z" fill="none" stroke="#c8001a" stroke-width="1.2"/>
-    <circle cx="15" cy="10" r="4.5" fill="#c8001a" opacity=".7"/><circle cx="15" cy="10" r="1.8" fill="#060408"/>
-  </svg>
-  <svg class="eye b1" style="top:8%;left:44%;width:16px;height:11px;" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 10 Q15 0 29 10 Q15 20 1 10Z" fill="none" stroke="#c8001a" stroke-width="1.2"/>
-    <circle cx="15" cy="10" r="4.5" fill="#c8001a" opacity=".7"/><circle cx="15" cy="10" r="1.8" fill="#060408"/>
-  </svg>
-  <svg class="eye b2" style="top:70%;left:62%;width:22px;height:14px;transform:rotate(5deg);" viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M1 10 Q15 0 29 10 Q15 20 1 10Z" fill="none" stroke="#c8001a" stroke-width="1.2"/>
-    <circle cx="15" cy="10" r="4.5" fill="#c8001a" opacity=".7"/><circle cx="15" cy="10" r="1.8" fill="#060408"/>
-  </svg>
-
-  <div class="rblock">
-    <div class="rq">I draw what language<br>refuses to hold.</div>
-    <div class="rq-attr">— ASHIKUR / ASSAM, INDIA</div>
-  </div>
-
-  <div class="hbar">
-    <div class="hbar-name">A S H I K U R</div>
-    <div class="hbar-sep"></div>
-    <a class="hbar-link" href="#sketches">SKETCHES</a>
-    <a class="hbar-link" href="#about">ABOUT</a>
-    <a class="hbar-link" href="#contact">CONTACT</a>
-    <div style="margin-left:auto;font-size:9px;letter-spacing:.1em;color:#2a1010;flex-shrink:0;">✦ ✦ ✦</div>
+  <!-- Bottom stats bar -->
+  <div class="hero-bar" aria-label="Portfolio statistics">
+    <div class="hbar-stat">
+      <div class="hbar-stat-num">10</div>
+      <div class="hbar-stat-label">ORIGINAL WORKS</div>
+    </div>
+    <div class="hbar-stat">
+      <div class="hbar-stat-num">2024</div>
+      <div class="hbar-stat-label">SINCE</div>
+    </div>
+    <div class="hbar-stat">
+      <div class="hbar-stat-num">2026</div>
+      <div class="hbar-stat-label">LATEST WORK</div>
+    </div>
+    <div class="hbar-marquee" aria-hidden="true">
+      <div class="hbar-marquee-inner">
+        <div class="hbar-marquee-item">HORROR MANGA <span>✦</span> SURREALISM <span>✦</span> DIGITAL ART <span>✦</span> QUEER LITERATURE <span>✦</span> ASSAMESE IDENTITY <span>✦</span> AS FLOWERS MAGAZINE <span>✦</span></div>
+        <div class="hbar-marquee-item">HORROR MANGA <span>✦</span> SURREALISM <span>✦</span> DIGITAL ART <span>✦</span> QUEER LITERATURE <span>✦</span> ASSAMESE IDENTITY <span>✦</span> AS FLOWERS MAGAZINE <span>✦</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     MANIFESTO
+═══════════════════════════════════════════════════════════════ -->
+<section class="manifesto" aria-labelledby="manifesto-heading">
+  <div class="manifesto-inner">
+    <div class="manifesto-label-col reveal">
+      <div class="manifesto-label">MANIFESTO</div>
+      <div class="manifesto-side-num" aria-hidden="true">01</div>
+    </div>
+    <div class="manifesto-text-col">
+      <blockquote class="manifesto-quote reveal reveal-delay-1">
+        The body is a horror story the mind keeps trying to edit.
+      </blockquote>
+      <div class="manifesto-body reveal reveal-delay-2">
+        <p>These drawings are confessions. Each line is a decision to stay in the discomfort, to not look away from the thing that lives in the corner of the eye.</p>
+        <p>Horror is not a genre here. It is a methodology. The surreal is not decoration. It is the only honest language for what the body knows and the mind cannot name.</p>
+        <p>Rooted in Assam. Editor-in-Chief of <em>as flowers</em> literary magazine. Poet. Visual artist. Someone who believes queer literature and horror manga are not as far apart as people think.</p>
+      </div>
+      <div class="manifesto-tags reveal reveal-delay-3">
+        <span class="m-tag"><span>HORROR MANGA</span></span>
+        <span class="m-tag"><span>SURREALISM</span></span>
+        <span class="m-tag"><span>QUEER ART</span></span>
+        <span class="m-tag"><span>DIGITAL</span></span>
+        <span class="m-tag"><span>ASSAM</span></span>
+        <span class="m-tag"><span>LITERARY</span></span>
+        <span class="m-tag"><span>BODY HORROR</span></span>
+        <span class="m-tag"><span>TENDERNESS</span></span>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- ══ GRID ══ -->
-<section class="grid-section" id="sketches">
-  <div class="gs-ghost" aria-hidden="true">10</div>
-  <div class="gs-head">
-    <div class="gs-label">SELECTED WORKS — 2024 / 2025</div>
-    <div class="gs-title">THE<br><span style="color:var(--r);">SKETCHES</span></div>
+<!-- ═══════════════════════════════════════════════════════════════
+     GALLERY
+═══════════════════════════════════════════════════════════════ -->
+<section class="gallery-section" id="sketches" aria-labelledby="gallery-heading">
+  <div class="gallery-ghost-num" aria-hidden="true">10</div>
+
+  <div class="gallery-header">
+    <div class="gallery-title-block">
+      <div class="gallery-eyebrow reveal">SELECTED WORKS / 2024 / 2025</div>
+      <h2 class="gallery-title reveal reveal-delay-1" id="gallery-heading">THE<br><em>SKETCHES</em></h2>
+    </div>
+    <div class="gallery-filter-row reveal reveal-delay-2" role="group" aria-label="Filter artworks">
+      <button class="filter-btn active" data-filter="all">ALL WORKS</button>
+    </div>
   </div>
 
-  <div class="cg">
+  <div class="gallery-grid" id="gallery-grid">
 
-    <!-- ROW 1 -->
-    <div class="row r1">
-      <div class="sk accent">
-        <div class="sk-img port"><img src="sk01.png" alt="Adrift"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">01</div><div class="sk-ov-title">ADRIFT</div><div class="sk-ov-sub">DIGITAL · JAN 2026</div></div>
-        <div class="sk-label"><div class="sk-num">01</div><div><div class="sk-name">ADRIFT</div><div class="sk-med">digital</div></div></div>
-      </div>
-      <div class="sk lift">
-        <div class="sk-img sq"><img src="sk02.png" alt="Tara & Darcy"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">02</div><div class="sk-ov-title">TARA & DARCY</div><div class="sk-ov-sub">DIGITAL · DEC 2025</div></div>
-        <div class="sk-label"><div class="sk-num">02</div><div><div class="sk-name">TARA & DARCY</div><div class="sk-med">digital</div></div></div>
-      </div>
-      <div class="sk drop">
-        <div class="sk-img port"><img src="sk03.png" alt="The Proposal"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">03</div><div class="sk-ov-title">THE PROPOSAL</div><div class="sk-ov-sub">INK · JAN 2026</div></div>
-        <div class="sk-label"><div class="sk-num">03</div><div><div class="sk-name">THE PROPOSAL</div><div class="sk-med">ink · digital</div></div></div>
-      </div>
-    </div>
+    <!-- 01 -->
+    <article class="art-card accent-border" data-index="0" data-medium="digital" aria-label="Artwork: Adrift">
+      <div class="art-img"><img src="sk01.png" alt="Adrift"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">ADRIFT</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>JAN 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">01</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">01</div><div><div class="art-label-name">ADRIFT</div><div class="art-label-med">digital</div></div></div>
+    </article>
 
-    <!-- ROW 2 -->
-    <div class="row r2">
-      <div class="sk">
-        <div class="sk-img sq"><img src="sk04.png" alt="Held"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">04</div><div class="sk-ov-title">HELD</div><div class="sk-ov-sub">CHARCOAL · JAN 2026</div></div>
-        <div class="sk-label"><div class="sk-num">04</div><div><div class="sk-name">HELD</div><div class="sk-med">charcoal · digital</div></div></div>
-      </div>
-      <div class="sk accent" style="margin-top:-40px;">
-        <div class="sk-img wide"><img src="sk05.png" alt="Confession"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">05</div><div class="sk-ov-title">CONFESSION</div><div class="sk-ov-sub">DIGITAL · FEB 2026</div></div>
-        <div class="sk-label"><div class="sk-num">05</div><div><div class="sk-name">CONFESSION</div><div class="sk-med">digital sketch</div></div></div>
-      </div>
-      <div class="sk lift">
-        <div class="sk-img sq"><img src="sk06.png" alt="Hollow"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">06</div><div class="sk-ov-title">HOLLOW</div><div class="sk-ov-sub">DIGITAL · FEB 2026</div></div>
-        <div class="sk-label"><div class="sk-num">06</div><div><div class="sk-name">HOLLOW</div><div class="sk-med">digital</div></div></div>
-      </div>
-    </div>
+    <!-- 02 -->
+    <article class="art-card" data-index="1" data-medium="digital" aria-label="Artwork: Tara and Darcy">
+      <div class="art-img"><img src="sk02.png" alt="Tara and Darcy"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">TARA &amp; DARCY</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>DEC 2025</span></div></div></div>
+      <div class="art-num" aria-hidden="true">02</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">02</div><div><div class="art-label-name">TARA &amp; DARCY</div><div class="art-label-med">digital</div></div></div>
+    </article>
 
-    <!-- ROW 3 -->
-    <div class="row r1">
-      <div class="sk drop2">
-        <div class="sk-img sq"><img src="sk07.png" alt="Clover"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">07</div><div class="sk-ov-title">CLOVER</div><div class="sk-ov-sub">DIGITAL · FEB 2026</div></div>
-        <div class="sk-label"><div class="sk-num">07</div><div><div class="sk-name">CLOVER</div><div class="sk-med">digital · ink</div></div></div>
-      </div>
-      <div class="sk accent lift2">
-        <div class="sk-img sq"><img src="sk08.png" alt="Companion"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">08</div><div class="sk-ov-title">COMPANION</div><div class="sk-ov-sub">DIGITAL · MAR 2026</div></div>
-        <div class="sk-label"><div class="sk-num">08</div><div><div class="sk-name">COMPANION</div><div class="sk-med">digital</div></div></div>
-      </div>
-      <div class="sk">
-        <div class="sk-img port"><img src="sk09.png" alt="See No Evil"></div>
-        <div class="sk-overlay"><div class="sk-ov-num">09</div><div class="sk-ov-title">SEE NO EVIL</div><div class="sk-ov-sub">DIGITAL · MAR 2026</div></div>
-        <div class="sk-label"><div class="sk-num">09</div><div><div class="sk-name">SEE NO EVIL</div><div class="sk-med">digital</div></div></div>
-      </div>
-    </div>
+    <!-- 03 -->
+    <article class="art-card" data-index="2" data-medium="digital" aria-label="Artwork: The Proposal">
+      <div class="art-img"><img src="sk03.png" alt="The Proposal"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">THE PROPOSAL</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>JAN 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">03</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">03</div><div><div class="art-label-name">THE PROPOSAL</div><div class="art-label-med">digital</div></div></div>
+    </article>
 
-    <!-- ROW 4 — panoramic -->
-    <div style="padding-bottom:80px;">
-      <div class="sk accent">
-        <div style="width:100%; overflow:hidden; height:480px;">
-          <img src="sk10.png" alt="Nightwatch" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:transform .4s ease;">
+    <!-- 04 -->
+    <article class="art-card" data-index="3" data-medium="digital" aria-label="Artwork: Held">
+      <div class="art-img"><img src="sk04.png" alt="Held"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">HELD</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>JAN 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">04</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">04</div><div><div class="art-label-name">HELD</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 05 -->
+    <article class="art-card accent-border" data-index="4" data-medium="digital" aria-label="Artwork: Confession">
+      <div class="art-img"><img src="sk05.png" alt="Confession"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">CONFESSION</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>FEB 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">05</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">05</div><div><div class="art-label-name">CONFESSION</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 06 -->
+    <article class="art-card" data-index="5" data-medium="digital" aria-label="Artwork: Hollow">
+      <div class="art-img"><img src="sk06.png" alt="Hollow"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">HOLLOW</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>FEB 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">06</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">06</div><div><div class="art-label-name">HOLLOW</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 07 -->
+    <article class="art-card" data-index="6" data-medium="digital" aria-label="Artwork: Clover">
+      <div class="art-img"><img src="sk07.png" alt="Clover"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">CLOVER</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>FEB 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">07</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">07</div><div><div class="art-label-name">CLOVER</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 08 -->
+    <article class="art-card accent-border" data-index="7" data-medium="digital" aria-label="Artwork: Companion">
+      <div class="art-img"><img src="sk08.png" alt="Companion"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">COMPANION</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>MAR 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">08</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">08</div><div><div class="art-label-name">COMPANION</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 09 -->
+    <article class="art-card" data-index="8" data-medium="digital" aria-label="Artwork: See No Evil">
+      <div class="art-img"><img src="sk09.png" alt="See No Evil"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">SEE NO EVIL</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>MAR 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">09</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">09</div><div><div class="art-label-name">SEE NO EVIL</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+    <!-- 10 — full width -->
+    <article class="art-card accent-border" data-index="9" data-medium="digital" aria-label="Artwork: Nightwatch">
+      <div class="art-img"><img src="sk10.png" alt="Nightwatch"></div>
+      <div class="art-overlay"><div class="art-info"><div class="art-title">NIGHTWATCH</div><div class="art-meta"><span>DIGITAL</span><span class="art-meta-dot"></span><span>MAR 2026</span></div></div></div>
+      <div class="art-num" aria-hidden="true">10</div>
+      <div class="art-corner-tl" aria-hidden="true"></div>
+      <div class="art-corner-br" aria-hidden="true"></div>
+      <div class="art-label"><div class="art-label-num">10</div><div><div class="art-label-name">NIGHTWATCH</div><div class="art-label-med">digital</div></div></div>
+    </article>
+
+  </div><!-- /gallery-grid -->
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HORROR INTERLUDE QUOTE
+═══════════════════════════════════════════════════════════════ -->
+<div class="horror-interlude" aria-hidden="true">
+  <div class="hi-inner">
+    <p class="hi-quote">
+      "The eye that watches from the corner of the canvas<br>
+      is not a metaphor. It is a witness."
+    </p>
+    <div class="hi-attr">ASHIKUR / ASSAM, INDIA / 2025</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TICKER BAND
+═══════════════════════════════════════════════════════════════ -->
+<div class="ticker-band" aria-hidden="true">
+  <div class="ticker-inner">
+    <div class="ticker-item">HORROR MANGA</div>
+    <div class="ticker-item">SURREALISM</div>
+    <div class="ticker-item">DIGITAL ART</div>
+    <div class="ticker-item">INK ILLUSTRATION</div>
+    <div class="ticker-item">QUEER LITERATURE</div>
+    <div class="ticker-item">ASSAM INDIA</div>
+    <div class="ticker-item">AS FLOWERS MAGAZINE</div>
+    <div class="ticker-item">BODY HORROR</div>
+    <div class="ticker-item">TENDERNESS</div>
+    <div class="ticker-item">HORROR MANGA</div>
+    <div class="ticker-item">SURREALISM</div>
+    <div class="ticker-item">DIGITAL ART</div>
+    <div class="ticker-item">INK ILLUSTRATION</div>
+    <div class="ticker-item">QUEER LITERATURE</div>
+    <div class="ticker-item">ASSAM INDIA</div>
+    <div class="ticker-item">AS FLOWERS MAGAZINE</div>
+    <div class="ticker-item">BODY HORROR</div>
+    <div class="ticker-item">TENDERNESS</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ABOUT
+═══════════════════════════════════════════════════════════════ -->
+<section class="about-section" id="about" aria-labelledby="about-heading">
+  <div class="about-inner">
+    <div class="about-left">
+      <div class="about-eyebrow reveal">THE ARTIST</div>
+      <h2 class="about-title reveal reveal-delay-1" id="about-heading">
+        ASHIKUR<br><em>RAHMAN</em>
+      </h2>
+      <div class="about-portrait reveal reveal-delay-2">
+        <div class="about-portrait-frame">
+          <img src="sk09.png" alt="Ashikur — artist portrait stand-in">
+          <div class="about-portrait-label">ASSAM, INDIA / 2025</div>
         </div>
-        <div class="sk-overlay" style="flex-direction:row;align-items:flex-end;justify-content:space-between;gap:18px;">
-          <div><div class="sk-ov-num">10</div><div class="sk-ov-title">NIGHTWATCH</div><div class="sk-ov-sub">DIGITAL · MAR 2026</div></div>
+      </div>
+    </div>
+    <div class="about-right">
+      <p class="about-text reveal">
+        <strong>Ashikur</strong> is a poet, visual artist, and editor from <em>Assam, India</em>. His work moves between horror manga darkness and soft, intimate warmth. Sometimes in the same piece.
+      </p>
+      <p class="about-text reveal reveal-delay-1">
+        The drawings are not illustrations. They are confessions made in ink. Each line is a decision to stay in the discomfort.
+      </p>
+      <div class="stitch-line reveal reveal-delay-2"></div>
+      <p class="about-text reveal reveal-delay-2">
+        Editor-in-Chief of <em>as flowers</em> literary magazine. Rooted in Assamese identity, queer literature, and a horror manga aesthetic that refuses to be categorized. The work carries that geography even when it doesn't announce it.
+      </p>
+      <div class="about-divider reveal reveal-delay-3"></div>
+      <div class="about-stats reveal reveal-delay-3">
+        <div class="about-stat">
+          <div class="about-stat-num">10</div>
+          <div class="about-stat-label">ORIGINAL WORKS</div>
         </div>
-        <div class="sk-label"><div class="sk-num">10</div><div><div class="sk-name">NIGHTWATCH</div><div class="sk-med">digital</div></div></div>
+        <div class="about-stat">
+          <div class="about-stat-num">2+</div>
+          <div class="about-stat-label">YEARS ACTIVE</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num">01</div>
+          <div class="about-stat-label">LITERARY MAGAZINE</div>
+        </div>
+        <div class="about-stat">
+          <div class="about-stat-num">∞</div>
+          <div class="about-stat-label">THINGS UNSAID</div>
+        </div>
+      </div>
+      <div class="about-interests reveal reveal-delay-4">
+        <span class="interest-tag"><span>HORROR MANGA</span></span>
+        <span class="interest-tag"><span>JUNJI ITO</span></span>
+        <span class="interest-tag"><span>SURREALISM</span></span>
+        <span class="interest-tag"><span>QUEER ART</span></span>
+        <span class="interest-tag"><span>BODY HORROR</span></span>
+        <span class="interest-tag"><span>POETRY</span></span>
+        <span class="interest-tag"><span>ASSAMESE CULTURE</span></span>
+        <span class="interest-tag"><span>LITERARY EDITING</span></span>
+        <span class="interest-tag"><span>INK WORK</span></span>
+        <span class="interest-tag"><span>DIGITAL ILLUSTRATION</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PROCESS
+═══════════════════════════════════════════════════════════════ -->
+<section class="process-section" id="process" aria-labelledby="process-heading">
+  <div class="process-inner">
+    <div class="process-header">
+      <div>
+        <div class="process-eyebrow reveal">HOW IT HAPPENS</div>
+        <h2 class="process-title reveal reveal-delay-1" id="process-heading">
+          THE<br><em>PROCESS</em>
+        </h2>
+      </div>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal" data-step="01">
+        <div class="process-step-num">01</div>
+        <span class="process-step-icon" aria-hidden="true">👁</span>
+        <div class="process-step-title">THE HAUNTING</div>
+        <p class="process-step-text">It starts with an image that won't leave. Not a concept, a feeling. Something seen in the peripheral vision of the mind.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1" data-step="02">
+        <div class="process-step-num">02</div>
+        <span class="process-step-icon" aria-hidden="true">✒</span>
+        <div class="process-step-title">THE MARK</div>
+        <p class="process-step-text">Ink first. Always ink. The irreversibility is the point. Digital tools come later, but the first mark must be committed, must carry the weight of something that cannot be undone.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2" data-step="03">
+        <div class="process-step-num">03</div>
+        <span class="process-step-icon" aria-hidden="true">🩸</span>
+        <div class="process-step-title">THE DARKNESS</div>
+        <p class="process-step-text">The shadows are built slowly. Layer by layer. Horror is not about the monster. It is about the space where the monster might be.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3" data-step="04">
+        <div class="process-step-num">04</div>
+        <span class="process-step-icon" aria-hidden="true">🕯</span>
+        <div class="process-step-title">THE TENDERNESS</div>
+        <p class="process-step-text">Then the light. Not to comfort, to complicate. The warmth in a horror piece is not relief. It is the thing that makes the horror unbearable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SECOND TICKER — REVERSED
+═══════════════════════════════════════════════════════════════ -->
+<div class="ticker-band" style="background: var(--void-mid);" aria-hidden="true">
+  <div class="ticker-inner" style="animation-direction: reverse; animation-duration: 30s;">
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">ADRIFT</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">TARA &amp; DARCY</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">THE PROPOSAL</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">HELD</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">CONFESSION</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">HOLLOW</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">CLOVER</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">COMPANION</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">SEE NO EVIL</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">NIGHTWATCH</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">ADRIFT</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">TARA &amp; DARCY</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">THE PROPOSAL</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">HELD</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">CONFESSION</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">HOLLOW</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">CLOVER</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">COMPANION</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">SEE NO EVIL</div>
+    <div class="ticker-item" style="color: rgba(139,0,0,0.6);">NIGHTWATCH</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════════════════════════════ -->
+<section class="contact-section" id="contact" aria-labelledby="contact-heading">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <div class="contact-eyebrow reveal">FIND ME</div>
+      <h2 class="contact-title reveal reveal-delay-1" id="contact-heading">
+        LET'S<br><em>TALK</em>
+      </h2>
+      <p class="contact-desc reveal reveal-delay-2">
+        For commissions, collaborations, literary submissions to <em>as flowers</em>, or just to say something that needed to be said.
+      </p>
+      <div class="contact-links reveal reveal-delay-3">
+        <a class="contact-link" href="https://instagram.com/a5hikur" target="_blank" rel="noopener noreferrer" aria-label="Instagram: @a5hikur">
+          <div class="cl-left">
+            <div class="cl-platform">INSTAGRAM</div>
+            <div class="cl-handle">@a5hikur</div>
+          </div>
+          <div class="cl-arrow" aria-hidden="true">↗</div>
+        </a>
+        <a class="contact-link" href="https://x.com/ashikurraxman" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter: @ashikurraxman">
+          <div class="cl-left">
+            <div class="cl-platform">X / TWITTER</div>
+            <div class="cl-handle">@ashikurraxman</div>
+          </div>
+          <div class="cl-arrow" aria-hidden="true">↗</div>
+        </a>
+        <a class="contact-link" href="mailto:ashikoor@proton.me" aria-label="Email: ashikoor@proton.me">
+          <div class="cl-left">
+            <div class="cl-platform">EMAIL</div>
+            <div class="cl-handle" style="font-size: clamp(14px,1.8vw,20px);">ashikoor@proton.me</div>
+          </div>
+          <div class="cl-arrow" aria-hidden="true">↗</div>
+        </a>
       </div>
     </div>
 
+    <div class="contact-right reveal reveal-delay-2">
+      <div class="contact-form-title">SEND A MESSAGE</div>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-field">
+          <label for="cf-name">YOUR NAME</label>
+          <input type="text" id="cf-name" name="name" placeholder="What do I call you?" autocomplete="name">
+        </div>
+        <div class="form-field">
+          <label for="cf-email">YOUR EMAIL</label>
+          <input type="email" id="cf-email" name="email" placeholder="Where do I write back?" autocomplete="email">
+        </div>
+        <div class="form-field">
+          <label for="cf-subject">SUBJECT</label>
+          <input type="text" id="cf-subject" name="subject" placeholder="Commission / Collab / Just saying hi">
+        </div>
+        <div class="form-field">
+          <label for="cf-message">MESSAGE</label>
+          <textarea id="cf-message" name="message" placeholder="Say the thing that needed to be said..."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="form-submit-btn"><span>SEND IT</span></button>
+          <span class="form-note" id="form-status"></span>
+        </div>
+      </form>
+    </div>
   </div>
 </section>
 
-
-<!-- ══ ABOUT ══ -->
-<section class="about-strip" id="about">
-  <div class="as-col">
-    <div class="as-head">THE ARTIST</div>
-    <div class="as-body">Ashikur is a poet, visual artist, and editor from Assam, India. His sketches move between horror manga darkness and soft, intimate warmth — sometimes in the same piece.</div>
-  </div>
-  <div class="as-col">
-    <div class="as-head">THE MEDIUM</div>
-    <div class="as-body">Digital illustration with ink-like marks. Each work sits at the edge of language — what the poems couldn't say, the drawings hold.</div>
-  </div>
-  <div class="as-col">
-    <div class="as-head">THE CONTEXT</div>
-    <div class="as-body">Editor-in-Chief of <em>as flowers</em> literary magazine. Rooted in Assamese identity, queer literature, and a horror manga aesthetic that refuses to be just one thing.</div>
-  </div>
-</section>
-
-
-<!-- ══ CONTACT ══ -->
-<section class="contact" id="contact">
-  <div class="ct-label">FIND ME</div>
-  <div class="ct-title">LET'S<br><span style="color:var(--r);">TALK</span></div>
-  <div class="ct-links">
-    <a class="ct-item" href="https://instagram.com/a5hikur" target="_blank">
-      <div class="ct-platform">INSTAGRAM</div>
-      <div class="ct-handle">@a5hikur</div>
-    </a>
-    <a class="ct-item" href="https://x.com/ashikurraxman" target="_blank">
-      <div class="ct-platform">X / TWITTER</div>
-      <div class="ct-handle">@ashikurraxman</div>
-    </a>
-    <a class="ct-item" href="mailto:ashikoor@proton.me">
-      <div class="ct-platform">EMAIL</div>
-      <div class="ct-handle" style="font-size:clamp(14px,1.8vw,20px);">ashikoor@proton.me</div>
-    </a>
-  </div>
-</section>
-
-
-<!-- ══ FOOTER ══ -->
+<!-- ═══════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════ -->
 <footer>
-  <div class="ft-name">ASHIKUR</div>
-  <div class="ft-tag">SKETCHES · DIGITAL ART · ASSAM, INDIA</div>
-  <div class="ft-yr">© MMXXV–MMXXVI &nbsp;·&nbsp; ALL RIGHTS RESERVED &nbsp;·&nbsp; ✦</div>
+  <div class="footer-ghost-name" aria-hidden="true">ASHIKUR</div>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="footer-logo" aria-label="Ashikur Home">Ashikur</a>
+      <p class="footer-tagline">
+        I draw what language refuses to hold. Horror manga darkness and intimate warmth, sometimes in the same piece.
+      </p>
+      <div class="footer-social" aria-label="Social links">
+        <a href="https://instagram.com/a5hikur" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+        <a href="https://x.com/ashikurraxman" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">X</a>
+        <a href="mailto:ashikoor@proton.me" class="footer-social-link" aria-label="Email">✉</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">NAVIGATE</div>
+      <ul class="footer-col-links">
+        <li><a href="#sketches">Sketches</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">WORKS</div>
+      <ul class="footer-col-links">
+        <li><a href="#sketches">Adrift</a></li>
+        <li><a href="#sketches">Tara &amp; Darcy</a></li>
+        <li><a href="#sketches">The Proposal</a></li>
+        <li><a href="#sketches">Held</a></li>
+        <li><a href="#sketches">Confession</a></li>
+        <li><a href="#sketches">Hollow</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">ELSEWHERE</div>
+      <ul class="footer-col-links">
+        <li><a href="https://instagram.com/a5hikur" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        <li><a href="https://x.com/ashikurraxman" target="_blank" rel="noopener noreferrer">X / Twitter</a></li>
+        <li><a href="mailto:ashikoor@proton.me">Email</a></li>
+        <li><a href="#">as flowers mag</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© MMXXV–MMXXVI &nbsp;·&nbsp; ASHIKUR &nbsp;·&nbsp; ALL RIGHTS RESERVED</div>
+    <div class="footer-credits">SKETCHES · DIGITAL ART · ASSAM, INDIA &nbsp;✦&nbsp; HORROR SURREALISM</div>
+  </div>
 </footer>
 
-</body>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   ARTWORK DATA
+═══════════════════════════════════════════════════════════════ */
+const artworks = [
+  {
+    index: 0, src: 'sk01.png', num: '01', title: 'ADRIFT',
+    meta: 'DIGITAL / JAN 2026',
+    desc: 'A figure unmoored from gravity and meaning. The body floats in the space between one thought and the next.',
+    medium: 'digital'
+  },
+  {
+    index: 1, src: 'sk02.png', num: '02', title: 'TARA & DARCY',
+    meta: 'DIGITAL / DEC 2025',
+    desc: 'Two figures in the specific tenderness of being witnessed. The horror is in the vulnerability of being truly seen.',
+    medium: 'digital'
+  },
+  {
+    index: 2, src: 'sk03.png', num: '03', title: 'THE PROPOSAL',
+    meta: 'DIGITAL / JAN 2026',
+    desc: 'What is being offered here is not a question but a wound.',
+    medium: 'digital'
+  },
+  {
+    index: 3, src: 'sk04.png', num: '04', title: 'HELD',
+    meta: 'DIGITAL / JAN 2026',
+    desc: 'To be held is to be contained. Containment is always ambiguous. Is this safety or capture?',
+    medium: 'digital'
+  },
+  {
+    index: 4, src: 'sk05.png', num: '05', title: 'CONFESSION',
+    meta: 'DIGITAL / FEB 2026',
+    desc: 'The mouth opens and what comes out is not words but something older. Confession as a physical act.',
+    medium: 'digital'
+  },
+  {
+    index: 5, src: 'sk06.png', num: '06', title: 'HOLLOW',
+    meta: 'DIGITAL / FEB 2026',
+    desc: 'The hollow is not a lack but a presence that has learned to take the shape of nothing.',
+    medium: 'digital'
+  },
+  {
+    index: 6, src: 'sk07.png', num: '07', title: 'CLOVER',
+    meta: 'DIGITAL / FEB 2026',
+    desc: 'Something growing in the wrong place. Life insisting on itself in the cracks of something broken.',
+    medium: 'digital'
+  },
+  {
+    index: 7, src: 'sk08.png', num: '08', title: 'COMPANION',
+    meta: 'DIGITAL / MAR 2026',
+    desc: 'The companion is not human. Or it was, once. The tenderness between them is real regardless.',
+    medium: 'digital'
+  },
+  {
+    index: 8, src: 'sk09.png', num: '09', title: 'SEE NO EVIL',
+    meta: 'DIGITAL / MAR 2026',
+    desc: 'The hands over the eyes are not hiding. They are a choice. The body knows what the eyes refuse to see.',
+    medium: 'digital'
+  },
+  {
+    index: 9, src: 'sk10.png', num: '10', title: 'NIGHTWATCH',
+    meta: 'DIGITAL / MAR 2026',
+    desc: 'The watcher at the edge of night. Not guarding against the dark but studying it, learning its grammar.',
+    medium: 'digital'
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════════════════════════ */
+(function initLoader() {
+  const loader = document.getElementById('loader');
+  const bar    = document.getElementById('loader-bar');
+  let progress = 0;
+
+  const interval = setInterval(() => {
+    progress += Math.random() * 18 + 4;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      bar.style.width = '100%';
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        document.body.style.overflow = '';
+        initReveal();
+      }, 400);
+    }
+    bar.style.width = progress + '%';
+  }, 80);
+
+  document.body.style.overflow = 'hidden';
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════════════════════════════ */
+(function initCursor() {
+  const outer = document.getElementById('cursor-outer');
+  const inner = document.getElementById('cursor-inner');
+  let mouseX = 0, mouseY = 0;
+  let outerX = 0, outerY = 0;
+  let raf;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    inner.style.left = mouseX + 'px';
+    inner.style.top  = mouseY + 'px';
+  });
+
+  function animateOuter() {
+    outerX += (mouseX - outerX) * 0.12;
+    outerY += (mouseY - outerY) * 0.12;
+    outer.style.left = outerX + 'px';
+    outer.style.top  = outerY + 'px';
+    raf = requestAnimationFrame(animateOuter);
+  }
+  animateOuter();
+
+  const hoverTargets = 'a, button, .art-card, .filter-btn, .m-tag, .interest-tag, .contact-link, .footer-social-link';
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverTargets)) {
+      outer.classList.add('hovering');
+      inner.classList.add('hovering');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverTargets)) {
+      outer.classList.remove('hovering');
+      inner.classList.remove('hovering');
+    }
+  });
+
+  document.addEventListener('mousedown', () => {
+    outer.style.transform = 'translate(-50%, -50%) scale(0.85)';
+    inner.style.transform = 'translate(-50%, -50%) scale(1.4)';
+  });
+
+  document.addEventListener('mouseup', () => {
+    outer.style.transform = 'translate(-50%, -50%) scale(1)';
+    inner.style.transform = 'translate(-50%, -50%) scale(1)';
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL PROGRESS + NAV + BACK TO TOP
+═══════════════════════════════════════════════════════════════ */
+(function initScroll() {
+  const progressBar = document.getElementById('scroll-progress');
+  const nav         = document.getElementById('main-nav');
+  const btt         = document.getElementById('back-to-top');
+
+  window.addEventListener('scroll', () => {
+    const scrollTop  = window.scrollY;
+    const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+    const pct        = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+
+    nav.classList.toggle('scrolled', scrollTop > 80);
+    btt.classList.toggle('visible', scrollTop > 600);
+  }, { passive: true });
+
+  btt.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════════════════════ */
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  els.forEach(el => observer.observe(el));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════════════════════════════ */
+(function initLightbox() {
+  const lb          = document.getElementById('lightbox');
+  const lbImg       = document.getElementById('lb-img');
+  const lbNum       = document.getElementById('lb-num');
+  const lbTitle     = document.getElementById('lb-title');
+  const lbMeta      = document.getElementById('lb-meta');
+  const lbDesc      = document.getElementById('lb-desc');
+  const lbClose     = document.getElementById('lb-close');
+  const lbPrev      = document.getElementById('lb-prev');
+  const lbNext      = document.getElementById('lb-next');
+  const lbProgress  = document.getElementById('lb-progress-fill');
+  let currentIndex  = 0;
+
+  function openLightbox(index) {
+    currentIndex = index;
+    updateLightbox();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbClose.focus();
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function updateLightbox() {
+    const art = artworks[currentIndex];
+    lbImg.src = art.src;
+    lbImg.alt = art.title;
+    lbNum.textContent = art.num;
+    lbTitle.textContent = art.title;
+    lbMeta.textContent = art.meta;
+    lbDesc.textContent = art.desc;
+    lbProgress.style.width = ((currentIndex + 1) / artworks.length * 100) + '%';
+
+    // Re-trigger animation
+    lbImg.style.animation = 'none';
+    lbImg.offsetHeight; // reflow
+    lbImg.style.animation = '';
+  }
+
+  function prevArtwork() {
+    currentIndex = (currentIndex - 1 + artworks.length) % artworks.length;
+    updateLightbox();
+  }
+
+  function nextArtwork() {
+    currentIndex = (currentIndex + 1) % artworks.length;
+    updateLightbox();
+  }
+
+  // Open on card click
+  document.querySelectorAll('.art-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.index, 10);
+      if (!isNaN(idx)) openLightbox(idx);
+    });
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', prevArtwork);
+  lbNext.addEventListener('click', nextArtwork);
+
+  // Click outside image to close
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) closeLightbox();
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   prevArtwork();
+    if (e.key === 'ArrowRight')  nextArtwork();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  lb.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  lb.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? nextArtwork() : prevArtwork();
+    }
+  }, { passive: true });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   GALLERY FILTER
+═══════════════════════════════════════════════════════════════ */
+(function initFilter() {
+  const btns  = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.art-card');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      cards.forEach(card => {
+        const medium = card.dataset.medium || 'digital';
+        const show   = filter === 'all' || medium === filter;
+
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+        if (show) {
+          card.style.opacity   = '1';
+          card.style.transform = '';
+          card.style.pointerEvents = '';
+        } else {
+          card.style.opacity   = '0.15';
+          card.style.transform = 'scale(0.97)';
+          card.style.pointerEvents = 'none';
+        }
+      });
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   PARALLAX — hero collage pieces
+═══════════════════════════════════════════════════════════════ */
+(function initParallax() {
+  const pieces = document.querySelectorAll('.hc-piece');
+  const speeds = [0.04, -0.03, 0.05, -0.04];
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    pieces.forEach((piece, i) => {
+      const speed = speeds[i] || 0.03;
+      piece.style.transform = `translateY(${scrollY * speed}px)`;
+    });
+  }, { passive: true });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING EYES — follow mouse slightly
+═══════════════════════════════════════════════════════════════ */
+(function initEyeTracking() {
+  const eyes = document.querySelectorAll('.float-eye');
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }, { passive: true });
+
+  function updateEyes() {
+    eyes.forEach((eye, i) => {
+      const rect   = eye.getBoundingClientRect();
+      const eyeCX  = rect.left + rect.width / 2;
+      const eyeCY  = rect.top  + rect.height / 2;
+      const dx     = mouseX - eyeCX;
+      const dy     = mouseY - eyeCY;
+      const angle  = Math.atan2(dy, dx);
+      const dist   = Math.min(Math.sqrt(dx*dx + dy*dy), 60);
+      const factor = 0.04 + (i * 0.01);
+      const tx     = Math.cos(angle) * dist * factor;
+      const ty     = Math.sin(angle) * dist * factor;
+      eye.style.transform = `translate(${tx}px, ${ty}px)`;
+    });
+    requestAnimationFrame(updateEyes);
+  }
+  updateEyes();
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   GLITCH EFFECT — random trigger on hero name
+═══════════════════════════════════════════════════════════════ */
+(function initGlitch() {
+  const heroName = document.querySelector('.hero-name');
+  if (!heroName) return;
+
+  function triggerGlitch() {
+    heroName.classList.add('glitching');
+    setTimeout(() => heroName.classList.remove('glitching'), 300);
+    const next = 4000 + Math.random() * 8000;
+    setTimeout(triggerGlitch, next);
+  }
+
+  setTimeout(triggerGlitch, 3000);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTACT FORM — client-side validation + feedback
+═══════════════════════════════════════════════════════════════ */
+(function initContactForm() {
+  const form   = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name    = form.querySelector('#cf-name').value.trim();
+    const email   = form.querySelector('#cf-email').value.trim();
+    const message = form.querySelector('#cf-message').value.trim();
+
+    if (!name || !email || !message) {
+      status.textContent = 'FILL IN THE REQUIRED FIELDS.';
+      status.style.color = 'var(--blood-bright)';
+      return;
+    }
+
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email)) {
+      status.textContent = 'THAT EMAIL LOOKS WRONG.';
+      status.style.color = 'var(--blood-bright)';
+      return;
+    }
+
+    // Simulate send
+    const btn = form.querySelector('.form-submit-btn span');
+    btn.textContent = 'SENDING...';
+    status.textContent = '';
+
+    setTimeout(() => {
+      btn.textContent = 'SENT ✦';
+      status.textContent = 'MESSAGE RECEIVED. I\'LL WRITE BACK.';
+      status.style.color = 'var(--bone-dim)';
+      form.reset();
+      setTimeout(() => {
+        btn.textContent = 'SEND IT';
+        status.textContent = '';
+      }, 5000);
+    }, 1200);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   NOISE INTENSITY — increases on hover over art cards
+═══════════════════════════════════════════════════════════════ */
+(function initNoiseReact() {
+  const noise = document.getElementById('noise-overlay');
+  const cards = document.querySelectorAll('.art-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      noise.style.opacity = '0.07';
+    });
+    card.addEventListener('mouseleave', () => {
+      noise.style.opacity = '0.04';
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   SMOOTH ANCHOR SCROLL
+═══════════════════════════════════════════════════════════════ */
+(function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      const offset = 64; // nav height
+      const top    = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   HORROR CURSOR TRAIL — blood drip particles
+═══════════════════════════════════════════════════════════════ */
+(function initCursorTrail() {
+  const particles = [];
+  const MAX = 18;
+  let lastX = 0, lastY = 0;
+  let frameCount = 0;
+
+  function createParticle(x, y) {
+    const p = document.createElement('div');
+    p.style.cssText = `
+      position: fixed;
+      left: ${x}px;
+      top: ${y}px;
+      width: ${2 + Math.random() * 3}px;
+      height: ${2 + Math.random() * 3}px;
+      background: rgba(139,0,0,${0.4 + Math.random() * 0.4});
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99996;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    `;
+    document.body.appendChild(p);
+
+    const vx = (Math.random() - 0.5) * 2;
+    const vy = Math.random() * 2 + 1;
+    let life = 1;
+    let px = x, py = y;
+
+    function tick() {
+      life -= 0.04;
+      px += vx;
+      py += vy;
+      p.style.left    = px + 'px';
+      p.style.top     = py + 'px';
+      p.style.opacity = Math.max(0, life);
+      if (life > 0) {
+        requestAnimationFrame(tick);
+      } else {
+        p.remove();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    frameCount++;
+    if (frameCount % 3 !== 0) return; // throttle
+
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    const speed = Math.sqrt(dx*dx + dy*dy);
+
+    if (speed > 4) {
+      createParticle(e.clientX, e.clientY);
+    }
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+  }, { passive: true });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION ENTRANCE — stagger children
+═══════════════════════════════════════════════════════════════ */
+(function initSectionStagger() {
+  const sections = document.querySelectorAll('section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('section-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  sections.forEach(s => observer.observe(s));
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   RANDOM GLITCH FLICKER — occasional full-page flash
+═══════════════════════════════════════════════════════════════ */
+(function initPageGlitch() {
+  function flicker() {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed; inset: 0; z-index: 99995;
+      background: rgba(139,0,0,0.04);
+      pointer-events: none;
+      animation: none;
+    `;
+    document.body.appendChild(overlay);
+
+    let flashes = 0;
+    const maxFlashes = 2 + Math.floor(Math.random() * 3);
+
+    function flash() {
+      overlay.style.opacity = flashes % 2 === 0 ? '1' : '0';
+      flashes++;
+      if (flashes < maxFlashes * 2) {
+        setTimeout(flash, 40 + Math.random() * 60);
+      } else {
+        overlay.remove();
+      }
+    }
+    flash();
+
+    const next = 15000 + Math.random() * 25000;
+    setTimeout(flicker, next);
+  }
+
+  setTimeout(flicker, 8000);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   TITLE SCRAMBLE — on hover over hero name
+═══════════════════════════════════════════════════════════════ */
+(function initTitleScramble() {
+  const heroName = document.querySelector('.hero-name');
+  if (!heroName) return;
+
+  const original = 'ASHIKUR';
+  const chars    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+  let scrambling = false;
+
+  heroName.addEventListener('mouseenter', () => {
+    if (scrambling) return;
+    scrambling = true;
+
+    const spans = heroName.querySelectorAll('.glitch-char');
+    let iterations = 0;
+    const maxIter  = 12;
+
+    const interval = setInterval(() => {
+      spans.forEach((span, i) => {
+        if (iterations > i * 1.5) {
+          span.textContent = original[i];
+        } else {
+          span.textContent = chars[Math.floor(Math.random() * chars.length)];
+        }
+      });
+
+      iterations++;
+      if (iterations >= maxIter + original.length * 1.5) {
+        clearInterval(interval);
+        spans.forEach((span, i) => { span.textContent = original[i]; });
+        scrambling = false;
+      }
+    }, 50);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   ABOUT STATS — count-up animation
+═══════════════════════════════════════════════════════════════ */
+(function initCountUp() {
+  const stats = document.querySelectorAll('.about-stat-num');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el  = entry.target;
+      const raw = el.textContent.trim();
+
+      // Only animate numeric values
+      const num = parseFloat(raw);
+      if (isNaN(num)) return;
+
+      const suffix = raw.replace(/[\d.]/g, '');
+      let current  = 0;
+      const step   = num / 40;
+      const isInt  = Number.isInteger(num);
+
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= num) {
+          current = num;
+          clearInterval(interval);
+        }
+        el.textContent = (isInt ? Math.floor(current) : current.toFixed(1)) + suffix;
+      }, 30);
+
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  stats.forEach(s => observer.observe(s));
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   HORROR SOUND HINT — visual pulse on certain interactions
+═══════════════════════════════════════════════════════════════ */
+(function initPulseEffect() {
+  const interlude = document.querySelector('.horror-interlude');
+  if (!interlude) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        interlude.style.animation = 'none';
+        // Subtle scale pulse
+        interlude.style.transition = 'transform 0.3s ease';
+        interlude.style.transform  = 'scaleX(1.002)';
+        setTimeout(() => {
+          interlude.style.transform = 'scaleX(1)';
+        }, 300);
+        observer.unobserve(interlude);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(interlude);
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   PROCESS STEPS — stagger on scroll
+═══════════════════════════════════════════════════════════════ */
+(function initProcessStagger() {
+  const steps = document.querySelectorAll('.process-step');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity   = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, i * 120);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  steps.forEach(step => {
+    step.style.opacity   = '0';
+    step.style.transform = 'translateY(24px)';
+    step.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(step);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   GALLERY CARD — tilt effect on mouse move
+═══════════════════════════════════════════════════════════════ */
+(function initCardTilt() {
+  const cards = document.querySelectorAll('.art-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect  = card.getBoundingClientRect();
+      const cx    = rect.left + rect.width  / 2;
+      const cy    = rect.top  + rect.height / 2;
+      const dx    = (e.clientX - cx) / (rect.width  / 2);
+      const dy    = (e.clientY - cy) / (rect.height / 2);
+      const tiltX = dy * -3;
+      const tiltY = dx *  3;
+      /* use an inner wrapper so grid placement isn't disturbed */
+      card.style.setProperty('--tilt-x', tiltX + 'deg');
+      card.style.setProperty('--tilt-y', tiltY + 'deg');
+      card.style.transform = `perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER — ghost name parallax
+═══════════════════════════════════════════════════════════════ */
+(function initFooterParallax() {
+  const ghost = document.querySelector('.footer-ghost-name');
+  if (!ghost) return;
+
+  window.addEventListener('scroll', () => {
+    const footer = ghost.closest('footer');
+    if (!footer) return;
+    const rect   = footer.getBoundingClientRect();
+    if (rect.top > window.innerHeight || rect.bottom < 0) return;
+    const progress = 1 - (rect.top / window.innerHeight);
+    ghost.style.transform = `translateX(-50%) translateY(${progress * -30}px)`;
+  }, { passive: true });
+})();
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT — run after DOM ready
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Reveal is called after loader finishes, but also init here as fallback
+  setTimeout(initReveal, 100);
+});
+</script>
 </html>
+
